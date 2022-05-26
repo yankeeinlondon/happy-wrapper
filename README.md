@@ -35,3 +35,55 @@ A wrapper around the popular [happy-dom](https://github.com/capricorn86/happy-do
     ```
 
 ### Selections
+
+- Select a node (or whole document):
+
+    ```ts
+    const html = "<html>...</html>";
+    const sel = select(html);
+    ```
+
+- Query and return a node or node list
+
+    ```ts
+    // returns first H1 node or null if not found
+    const h1: IElement | null = sel.findFirst('h1'); 
+    // throw an error if not found
+    const h1b: IElement = sel.findFirst("h1", "couldn't find the H1 selector");
+    ```
+
+- Iterate over a selector and mutate the selected nodes
+
+    ```ts
+    return html.updateAll('h1')(el => 
+        pipe(
+            el,
+            addClass("foobar"),
+            changeTagName("h2"),
+            wrap('<div class="was-h1">')
+        )
+    );
+    ```
+
+## Documentation Via Typing
+
+Formal documentation is not expected to every be much but we believe that strong typescript types are the way to express documentation that is both easier to maintain and easier to consume.
+
+All available symbols are named exports and can be explored via symbol completion in your editor of choice. Further, an attempt has been made to provide rich types that describe and properly limit the scope of type so that you're use is hopefully understood and safe.
+
+## Re-Exports
+
+To avoid any small API variations that might exist in future `happy-dom` versions we do re-export the key symbols from that library. That includes:
+
+- `IElement`, `IText`, and `INode`
+- `Document`, and `DocumentFragment`
+
+We actually _re_-export `DocumentFragment` as both `DocumentFragment` and as `Fragment`. We do this because the _type_ for `DocumentFragment` will be auto-associated to the browser's DOM if you don't explicitly state it and Happy DOM's implementation is a subset of the full DOM so you'll get typing errors that may seem baffling. To avoid this we prefer use of the short and explicit type of `Fragment`.
+
+## Contributions
+
+This library was built with a purpose in mind and therefore it's surface area may have some gaps in terms of addressing all obvious use-cases around the DOM. Happy to work with anyone who wants to add in a PR to make this a better subset.
+
+## License
+
+This library is made available for use under the MIT open source license.
