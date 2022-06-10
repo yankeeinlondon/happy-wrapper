@@ -1,5 +1,24 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.tabSize": 2,
+  "[markdown]": {
+    "editor.tabSize": 4
+  },
+  "[typescript]": {
+    "editor.tabSize": 2
+  },
+  "eslint.validate": [
+    "typescript"
+  ],
   "cSpell.words": [
-    "nada"
+    "dasherize",
+    "Frontmatter",
+    "klasses",
+    "nada",
+    "onetwothree",
+    "templating",
+    "userland"
   ]
 }

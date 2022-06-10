@@ -55,6 +55,7 @@ A wrapper around the popular [happy-dom](https://github.com/capricorn86/happy-do
 - Iterate over a selector and mutate the selected nodes
 
     ```ts
+    import { pipe } from "fp-ts/lib/function";
     return html.updateAll('h1')(el => 
         pipe(
             el,
@@ -64,6 +65,8 @@ A wrapper around the popular [happy-dom](https://github.com/capricorn86/happy-do
         )
     );
     ```
+
+    > Note: you don't have to use a library like [fp-ts](https://github.com/gcanti/fp-ts) but because the exposed API surface is functional in many ways, utilities like pipe and flow can be quite handy.
 
 ## Documentation Via Typing
 
@@ -78,11 +81,11 @@ To avoid any small API variations that might exist in future `happy-dom` version
 - `IElement`, `IText`, and `INode`
 - `Document`, and `DocumentFragment`
 
-We actually _re_-export `DocumentFragment` as both `DocumentFragment` and as `Fragment`. We do this because the _type_ for `DocumentFragment` will be auto-associated to the browser's DOM if you don't explicitly state it and Happy DOM's implementation is a subset of the full DOM so you'll get typing errors that may seem baffling. To avoid this we prefer use of the short and explicit type of `Fragment`.
+> **Note:** we actually _re_-export `DocumentFragment` as both `DocumentFragment` and as `Fragment`. We do this because the _type_ for `DocumentFragment` will be auto-associated to the browser's DOM if you don't explicitly state it and Happy DOM's implementation is a subset of the full DOM so you'll get typing errors that may seem baffling. To avoid this we prefer use of the short and explicit type of `Fragment`.
 
 ## Contributions
 
-This library was built with a purpose in mind and therefore it's surface area may have some gaps in terms of addressing all obvious use-cases around the DOM. Happy to work with anyone who wants to add in a PR to make this a better subset.
+This library was built with a specific purpose in mind and therefore it's surface area may have some gaps in terms of addressing all obvious use-cases around the DOM. Happy to work with anyone who wants to add in a PR to make this a better subset.
 
 ## License
 

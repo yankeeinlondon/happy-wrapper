@@ -1,18 +1,19 @@
-import { pipe } from 'fp-ts/lib/function'
-import type { IElement } from './index'
-import type { Events } from 'vue'
-import type { INode } from 'happy-dom'
-import type { Container, ContainerOrHtml, DocRoot, GetAttribute, HTML } from './happy-types'
-import { createElement, createFragment, createNode } from './create'
-import { HappyMishap } from './errors'
-import { isDocument, isElement, isFragment } from './type-guards'
-import { getNodeType, solveForNodeType, toHtml } from './utils'
+/* eslint-disable unicorn/consistent-function-scoping */
+import { pipe } from "fp-ts/lib/function";
+import type { IElement } from "./index";
+import type { Events } from "vue";
+import type { INode } from "happy-dom";
+import type { Container, ContainerOrHtml, DocRoot, GetAttribute, HTML } from "./happy-types";
+import { createElement, createFragment, createNode } from "./create";
+import { HappyMishap } from "./errors";
+import { isDocument, isElement, isFragment } from "./type-guards";
+import { getNodeType, solveForNodeType, toHtml } from "./utils";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type SetAttribute<T extends string> = (value: string) => <N extends Container | HTML>(node: N) => N
+export type SetAttribute<T extends string> = (value: string) => <N extends Container | HTML>(node: N) => N;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type SetAttributeTo<_T extends string, _V extends string> = <N extends Container | HTML>(node: N) => N
+export type SetAttributeTo<_T extends string, _V extends string> = <N extends Container | HTML>(node: N) => N;
 
 export const setAttribute = <T extends string>(
   attr: T,
@@ -22,8 +23,8 @@ export const setAttribute = <T extends string>(
       node: N,
     ): N => {
     const invalidNode = (n: INode) => {
-      throw new HappyMishap(`You can not use the setAttribute() utility on a node of type: "${getNodeType(n)}"`, { name: `setAttribute(${attr})(${value})(INVALID)` })
-    }
+      throw new HappyMishap(`You can not use the setAttribute() utility on a node of type: "${getNodeType(n)}"`, { name: `setAttribute(${attr})(${value})(INVALID)` });
+    };
     const result = solveForNodeType()
       .mirror()
       .solver({
@@ -31,55 +32,54 @@ export const setAttribute = <T extends string>(
         text: t => invalidNode(t),
         node: n => invalidNode(n),
         fragment: (f) => {
-          f.firstElementChild.setAttribute(attr, value)
-          return f
+          f.firstElementChild.setAttribute(attr, value);
+          return f;
         },
         document: (d) => {
-          d.body.firstElementChild.setAttribute(attr, value)
-          return d
+          d.body.firstElementChild.setAttribute(attr, value);
+          return d;
         },
         element: (e) => {
-          e.setAttribute(attr, value)
-          return e
+          e.setAttribute(attr, value);
+          return e;
         },
-      })(node)
+      })(node);
 
-    return result
-  }
+    return result;
+  };
 
 export const getAttribute = <T extends string>(attr: T): GetAttribute<T> => {
-  return solveForNodeType('text', 'node')
+  return solveForNodeType("text", "node")
     .outputType<string>()
     .solver({
       html: h => pipe(h, createFragment, getAttribute(attr)),
       fragment: f => f.firstElementChild.getAttribute(attr),
       document: doc => doc.body.firstElementChild.getAttribute(attr),
       element: el => el.getAttribute(attr),
-    })
-}
+    });
+};
 
-const getClass = getAttribute('class')
-const setClass = setAttribute('class')
+const getClass = getAttribute("class");
+const setClass = setAttribute("class");
 /**
  * Provides the classes defined on a given container's top level
  * element as an array of strings
  */
 export const getClassList = (container: Container | HTML | null): string[] => {
-  if (!container)
-    return []
+  if (!container) {return [];};
 
   return solveForNodeType().outputType<string[]>().solver({
     html: h => pipe(h, createFragment, getClassList),
     document: d => getClass(d.body.firstElementChild)?.split(/\s+/) || [],
     fragment: f => getClass(f.firstElementChild)?.split(/\s+/) || [],
     element: e => getClass(e)?.split(/\s+/) || [],
-    text: (n) => { throw new HappyMishap('Passed in a text node to getClassList!', { name: 'getClassList', inspect: n }) },
-    node: (n) => { throw new HappyMishap('Passed in an unknown node type to getClassList!', { name: 'getClassList', inspect: n }) },
-  })(container).filter(i => i)
-}
+    text: (n) => { throw new HappyMishap("Passed in a text node to getClassList!", { name: "getClassList", inspect: n }); },
+    node: (n) => { throw new HappyMishap("Passed in an unknown node type to getClassList!", { name: "getClassList", inspect: n }); },
+  })(container).filter(Boolean);
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type RemoveClass<R extends string | string[]> = <C extends DocRoot | IElement | HTML>(container: C) => C
+export type RemoveClass<R extends string | string[]> = <C extends DocRoot | IElement | HTML>(container: C) => C;
 
 /**
  * Removes a class from the top level node of a container's body.
@@ -89,20 +89,18 @@ export type RemoveClass<R extends string | string[]> = <C extends DocRoot | IEle
 export const removeClass = <R extends string | string[]>(
   remove: R,
 ): RemoveClass<R> => <D extends DocRoot | IElement | HTML>(doc: D): D => {
-  const current = getClass(doc)?.split(/\s+/g) || []
-  const toRemove: string[] = !Array.isArray(remove) ? [remove] : remove
+  const current = getClass(doc)?.split(/\s+/g) || [];
+  const toRemove: string[] = !Array.isArray(remove) ? [remove] : remove;
 
-  const resultantClassString = Array.from(
-    new Set<string>(current.filter(c => !toRemove.includes(c))),
-  )
-    .filter(i => i)
-    .join(' ')
+  const resultantClassString = [...new Set<string>(current.filter(c => !toRemove.includes(c)))]
+    .filter(Boolean)
+    .join(" ");
 
-  return setClass(resultantClassString)(doc)
-}
+  return setClass(resultantClassString)(doc);
+};
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type AddClass<A extends string[] | string[][]> = <C extends DocRoot | IElement | HTML>(container: C) => C
+export type AddClass<A extends string[] | string[][]> = <C extends DocRoot | IElement | HTML>(container: C) => C;
 
 /**
  * Adds a class to the top level node of a document's body.
@@ -110,33 +108,33 @@ export type AddClass<A extends string[] | string[][]> = <C extends DocRoot | IEl
 export const addClass = <A extends string[] | string[][]>(
   ...add: A
 ): AddClass<A> => <D extends DocRoot | IElement | HTML>(doc: D): D => {
-  const toAdd = (Array.isArray(add) ? add.flat() : [add]) as string[]
+  const toAdd = (Array.isArray(add) ? add.flat() : [add]) as string[];
 
-  const currentClasses = getClass(doc)?.split(/\s+/g) || []
-  const resultantClasses = Array.from(new Set<string>([...currentClasses, ...toAdd]))
+  const currentClasses = getClass(doc)?.split(/\s+/g) || [];
+  const resultantClasses = [...new Set<string>([...currentClasses, ...toAdd])]; 
 
-  return setClass(resultantClasses.join(' ').trim())(doc) as D
-}
+  return setClass(resultantClasses.join(" ").trim())(doc) as D;
+};
 
 export const addVueEvent = (event: keyof Events, value: string) => {
   return <T extends IElement | HTML>(el: T): T => {
-    const isHtml = typeof el === 'string'
-    const bound = getAttribute('v-bind')(isHtml ? createElement(el) : el)
+    const isHtml = typeof el === "string";
+    const bound = getAttribute("v-bind")(isHtml ? createElement(el) : el);
     const bind = bound
-      ? bound.replace('}', `, ${event}: '${value}' }`)
-      : `{ ${event}: "${value}" }`
-    const e2 = setAttribute('v-bind')(bind)(el)
+      ? bound.replace("}", `, ${event}: '${value}' }`)
+      : `{ ${event}: "${value}" }`;
+    const e2 = setAttribute("v-bind")(bind)(el);
 
-    return (isHtml ? toHtml(e2) : el) as T
-  }
-}
+    return (isHtml ? toHtml(e2) : el) as T;
+  };
+};
 
-export type Filter = (string | RegExp)
-export type FilterCallback = (removed: string[]) => void
-export type FiltersWithCallback = [FilterCallback, ...Filter[]]
+export type Filter = (string | RegExp);
+export type FilterCallback = (removed: string[]) => void;
+export type FiltersWithCallback = [FilterCallback, ...Filter[]];
 
 function hasFilterCallback(filters: Filter[] | FiltersWithCallback): filters is FiltersWithCallback {
-  return typeof filters[0] === 'function'
+  return typeof filters[0] === "function";
 }
 
 /**
@@ -159,38 +157,35 @@ export const filterClasses = <A extends Filter[] | [FilterCallback, ...Filter[]]
     ? doc.firstElementChild as IElement
     : isElement(doc)
       ? doc as IElement
-      : null
-  if (!el)
-    throw new HappyMishap('An invalid container was passed into filterClasses()!', { name: 'filterClasses', inspect: doc })
+      : null;
+  if (!el) {throw new HappyMishap("An invalid container was passed into filterClasses()!", { name: "filterClasses", inspect: doc });};
 
-  const filters = hasFilterCallback(args) ? args.slice(1) as Filter[] : args as Filter[]
-  const cb = hasFilterCallback(args) ? args[0] : undefined
-  const classes = getClassList(el)
-  const removed: string[] = []
+  const filters = hasFilterCallback(args) ? args.slice(1) as Filter[] : args as Filter[];
+  const cb = hasFilterCallback(args) ? args[0] : undefined;
+  const classes = getClassList(el);
+  const removed: string[] = [];
 
-  classes.forEach((klass) => {
+  for (const klass of classes) {
     const matched = !filters.every(f =>
-      typeof f === 'string'
+      typeof f === "string"
         ? f.trim() !== klass.trim()
         : !f.test(klass),
-    )
-    if (matched)
-      removed.push(klass)
-  })
+    );
+    if (matched) {removed.push(klass);}
+  };
 
-  setClass(classes.filter(k => !removed.includes(k)).join(' '))(doc)
+  setClass(classes.filter(k => !removed.includes(k)).join(" "))(doc);
 
-  if (cb)
-    cb(removed)
+  if (cb) {cb(removed);};
 
-  return doc
-}
+  return doc;
+};
 
 /**
  * Checks whether a given node has a parent reference
  */
 export const hasParentElement = (node: ContainerOrHtml) => {
-  const n = typeof node === 'string' ? createNode(node) : node
+  const n = typeof node === "string" ? createNode(node) : node;
   return solveForNodeType().outputType<boolean>().solver({
     html: () => false,
     text: t => !!t.parentElement,
@@ -198,14 +193,14 @@ export const hasParentElement = (node: ContainerOrHtml) => {
     fragment: f => !!f.parentElement,
     document: () => true,
     node: n => !!n.parentElement,
-  })(n)
-}
+  })(n);
+};
 
 /**
  * Get's the parent element of a given node or returns `null` if not
  * present.
  */
 export const getParent = (node: ContainerOrHtml) => {
-  return hasParentElement(node) ? (node as Container).parentElement : null
-}
+  return hasParentElement(node) ? (node as Container).parentElement : null;
+};
 
