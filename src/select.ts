@@ -100,8 +100,10 @@ export const select = <D extends Document | Fragment | IElement | HTML>(node: D)
           el.remove();
         } else if (!isElement(elReplacement)) {
           throw new HappyMishap(`The return value for a call to select(${getNodeType(rootNode)}).update(${selection}) return an invalid value! Value return values are an IElement or false.`, { name: "select.update", inspect: el });
-        } else {
-          if (errorIfNotFound) {
+        } 
+        
+      } else {
+        if (errorIfNotFound) {
             throw new HappyMishap(errorIfNotFound === true
               ? `The selection "${selection}" was not found so the update() operation wasn't able to be run`
               : errorIfNotFound,
@@ -109,15 +111,15 @@ export const select = <D extends Document | Fragment | IElement | HTML>(node: D)
               name: `select(${selection}).update(sel)`,
               inspect: ["parent node", rootNode],
             });
-          }
-
-          if (!selection) {
-            throw new HappyMishap(
-              `Call to select(container).update() was intended to target the root node of the selection but nothing was selected! This shouldn\'t really happen ... the rootNode\'s type is ${typeof rootNode}${typeof rootNode === "object" ? `, 
-              ${getNodeType(rootNode)} [element-like: ${isElementLike(rootNode)}, element: ${isElement(rootNode)}, children: ${rootNode.childNodes.length}]` : ""}`
-            );
-          }
         }
+
+        if (!selection) {
+          throw new HappyMishap(
+            `Call to select(container).update() was intended to target the root node of the selection but nothing was selected! This shouldn\'t really happen ... the rootNode\'s type is ${typeof rootNode}${typeof rootNode === "object" ? `, 
+            ${getNodeType(rootNode)} [element-like: ${isElementLike(rootNode)}, element: ${isElement(rootNode)}, children: ${rootNode.childNodes.length}]` : ""}`
+          );
+        }
+
       }
 
       return api;

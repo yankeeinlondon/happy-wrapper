@@ -1,6 +1,6 @@
 {
   "name": "@yankeeinlondon/happy-wrapper",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A functional API surface wrapping happy-dom",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap external",
+    "watch": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --watch",
     "test": "vitest",
     "test:ui": "vitest ui",
     "lint": "eslint .",
@@ -32,7 +33,7 @@
   "dependencies": {
     "callsites": "^3.1.0",
     "fp-ts": "^2.12.1",
-    "happy-dom": "^4.1.0",
+    "happy-dom": "^5.2.0",
     "native-dash": "^1.22.1"
   },
   "devDependencies": {

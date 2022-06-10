@@ -7,6 +7,21 @@ import { isContainer, isElement, isElementLike, isTextNode, isTextNodeLike, isUp
 import { getNodeType, solveForNodeType, toHtml } from "./utils";
 import type { Document, Fragment, IElement, INode } from "./index";
 
+function descClass(n: Container) {
+  const list = getClassList(n);
+  return list.length > 0 ? `{ ${list.join(" ")} }` : "";
+}
+
+function descFrag(n: Fragment) {
+  // eslint-disable-next-line no-use-before-define
+  const children = getChildren(n).map(i => describeNode(i));
+  return isElementLike(n)
+    ? `[el: ${n.firstElementChild.tagName.toLowerCase()}]${descClass}`
+    : isTextNodeLike(n)
+      ? `[text: ${n.textContent.slice(0, 4).replace(/\n+/g, "")}...]`
+      : `[children: ${children.length > 0 ? `${children.join(", ")}` : "none"}]`;
+}
+
 export const describeNode = (node: Container | HTML | null | UpdateSignature | any[]): string => {
   if (!node) {
     return node === null ? "[null]" : "undefined";
@@ -267,17 +282,5 @@ export const siblings = <C extends UpdateSignature | ContainerOrHtml[]>
   return into()(...content);
 };
 
-function descClass(n: Container) {
-  const list = getClassList(n);
-  return list.length > 0 ? `{ ${list.join(" ")} }` : "";
-}
 
-function descFrag(n: Fragment) {
-  const children = getChildren(n).map(i => describeNode(i));
-  return isElementLike(n)
-    ? `[el: ${n.firstElementChild.tagName.toLowerCase()}]${descClass}`
-    : isTextNodeLike(n)
-      ? `[text: ${n.textContent.slice(0, 4).replace(/\n+/g, "")}...]`
-      : `[children: ${children.length > 0 ? `${children.join(", ")}` : "none"}]`;
-}
 

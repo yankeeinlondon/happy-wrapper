@@ -6,6 +6,9 @@
   "[markdown]": {
     "editor.tabSize": 4
   },
+  "[rust]": {
+    "editor.tabSize": 4
+  },
   "[typescript]": {
     "editor.tabSize": 2
   },
@@ -15,6 +18,7 @@
   "cSpell.words": [
     "dasherize",
     "Frontmatter",
+    "klass",
     "klasses",
     "nada",
     "onetwothree",

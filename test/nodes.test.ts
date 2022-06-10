@@ -115,12 +115,12 @@ describe("nodes", () => {
     // basic test with HTML
     const beforeTwo = before(two);
     const t1 = beforeTwo(one);
-    expect(t1).toBe(`${two}${one}`);
+    expect(t1, "basic test with HTML").toBe(`${two}${one}`);
     // a fragment should work the same
     const One = createFragment(one);
     expect(One.parentElement).toBeFalsy();
     const t2 = before(two)(One);
-    expect(toHtml(t2)).toBe(`${two}${one}`);
+    expect(toHtml(t2), "with a fragment").toBe(`${two}${one}`);
 
     // an element without a parent, however, has no _natural parent_
     // so it should throw an error in this case
@@ -135,7 +135,10 @@ describe("nodes", () => {
 
     // intent is for: [one, three, two]
     const placed = select(wrappedOneTwo)
-      .update(".two", 'did not find "two" class!')((el) => {
+      .update(
+        ".two", 
+        `did not find "two" class when using select [${getClassList(el)}] on:\n${toHtml(wrappedOneTwo)}`
+      )((el) => {
         expect(getClassList(el)).toContain("two");
         // the element must have a parent to be able to run before()
         expect(el.parentNode).toBeTruthy();

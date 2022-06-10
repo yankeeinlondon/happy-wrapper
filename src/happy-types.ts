@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import type { getNodeType } from "./utils";
 import type { Document, Fragment, IElement, INode, IText } from "./index";
 export type InspectionTuple = [msg: string, item: unknown];

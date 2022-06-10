@@ -3,7 +3,13 @@ import { pipe } from "fp-ts/lib/function";
 import type { IElement } from "./index";
 import type { Events } from "vue";
 import type { INode } from "happy-dom";
-import type { Container, ContainerOrHtml, DocRoot, GetAttribute, HTML } from "./happy-types";
+import type { 
+  Container, 
+  ContainerOrHtml, 
+  DocRoot, 
+  GetAttribute, 
+  HTML 
+} from "./happy-types";
 import { createElement, createFragment, createNode } from "./create";
 import { HappyMishap } from "./errors";
 import { isDocument, isElement, isFragment } from "./type-guards";

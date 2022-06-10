@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import { createFragment } from "./create";
 import type { Container, DocRoot, InspectionTuple, UpdateSignature } from "./happy-types";
 import type { HappyMishap } from "./errors";
