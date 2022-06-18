@@ -4,7 +4,7 @@ import { createDocument, createElement, createFragment, createNode } from "./cre
 import type { Container, ContainerOrHtml, DocRoot, HTML, UpdateSignature } from "./happy-types";
 import { isDocument, isElement, isElementLike, isFragment, isTextNode, isTextNodeLike, isUpdateSignature } from "./type-guards";
 import { clone, getNodeType, solveForNodeType, toHtml } from "./utils";
-import type { Document, Fragment, IElement, IText } from "./index";
+import { addClass, Document, Fragment, getClassList, IElement, IText } from "./index";
 
 /**
  * converts a IHTMLCollection or a INodeList to an array
@@ -54,6 +54,31 @@ export const extract = <M extends (IElement | IText) | IElement | undefined>(mem
   : IElement | IText>(node: T): false => {
   if (memory) {memory.push(clone(node) as T & M);};
   return false; // indicates that node passed in should be removed
+};
+
+/**
+ * **placeholder**
+ * 
+ * Very similar to the `extract()` utility where it allows certain elements to be 
+ * removed from the DOM tree and stored in a separate variable but in this case 
+ * rather then leaving _nothing_ in it's place we can instead leave a _placeholder_ node.
+ * 
+ * If you want to define what this placeholder node should look like you may --
+ * by setting the optional `placeholder` element -- but by default you will get:
+ * 
+ * ```html
+ * <placeholder></placeholder>
+ * ```
+ * 
+ * But all classes on removed element will be retained.
+ */
+export const placeholder= <M extends (IElement | IText) | IElement | undefined>(memory?: M[], placeholder?: IElement) => <T extends IElement>(node: T): IElement => {
+  if (memory) {memory.push(clone(node) as T & M);};
+  const el = placeholder ? placeholder : createElement("<placeholder></placeholder>");
+  addClass(...getClassList(node))(el);
+  node.replaceWith(el);
+
+  return node;
 };
 
 /**

@@ -1,7 +1,13 @@
 import { createFragment } from "./create";
 import { describeNode, inspect } from "./diagnostics";
 import { HappyMishap } from "./errors";
-import type { HTML, MapCallback, NodeSelector, UpdateCallback, UpdateCallback_Native } from "./happy-types";
+import type { 
+  HTML, 
+  MapCallback, 
+  NodeSelector, 
+  UpdateCallback, 
+  UpdateCallback_Native 
+} from "./happy-types";
 import { getChildElements } from "./nodes";
 import { isDocument, isElement, isElementLike, isFragment } from "./type-guards";
 import { clone, getNodeType, toHtml } from "./utils"; 

@@ -1,6 +1,6 @@
 import { pipe } from "fp-ts/lib/function";
 import { describe, expect, it } from "vitest";
-import { after, before, changeTagName, clone, createElement, createFragment, getChildren, getClassList, getNodeType, hasParentElement, IElement, inspect, into, isHappyWrapperError, replaceElement, select, toHtml, wrap } from "../src";
+import { after, before, changeTagName, clone, createElement, createFragment, getChildren, getClassList, getNodeType, hasParentElement, IElement, inspect, into, isHappyWrapperError, placeholder, replaceElement, select, toHtml, wrap } from "../src";
 
 describe("nodes", () => {
   it("into() with multiple nodes injected", () => {
@@ -189,8 +189,20 @@ describe("nodes", () => {
     expect(t1).toBe(`${one}${two}`);
   });
 
+  it("tag capitalization is lost in element", () => {
+    expect(createElement("<MyComponent></MyComponent>").outerHTML).toBe("<mycomponent></mycomponent>");
+  });
 
-    it("changeTag() utility works as expected with all container types", () => {
+  it("placeholder() replaces a selector with a placeholder while retaining original externally", () => {
+    const original: IElement[] = [];
+    const html = `<div><span class="hi">hi</span><span></span><span class="hi">bye</span></div>`;
+    const t = select(html).updateAll(".hi")(placeholder(original)).toContainer();
+    expect(original).toHaveLength(2);
+    expect(t).toBe(`<div><placeholder class="hi"></placeholder><span></span><placeholder class="hi"></placeholder></div>`);
+  });
+
+
+  it("changeTag() utility works as expected with all container types", () => {
     const html = '<span class="foobar">hello world</span>';
     const toDiv = changeTagName("div");
     // html

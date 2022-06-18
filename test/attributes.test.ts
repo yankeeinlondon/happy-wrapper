@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { addClass, addVueEvent, clone, createDocument, createElement, createFragment, filterClasses, getClassList, removeClass, setAttribute, toHtml } from "../src";
 
 describe("attributes", () => {
-      it("setAttribute() utility", () => {
+  it("setAttribute() utility", () => {
     const html = "<span>foo</span>";
     const frag = createFragment("<span>foo</span>");
     const setFoo = setAttribute("class")("foo");

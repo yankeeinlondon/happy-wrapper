@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { changeTagName, createElement, createFragment, select, toHtml } from "../src";
 
 describe("select", () => {
-      it("select() utility's updateAll functionality", () => {
+  it("select() utility's updateAll functionality", () => {
     const html = `
     <div class='wrapper'>
       <span class='line line-1'>1</span>
@@ -20,6 +20,33 @@ describe("select", () => {
     const tags = found.map(f => f.tagName.toLowerCase());
     for (const t of tags)  {expect(t).toBe("div");}
   });
+
+  
+  it("can distinguish based on attribute being present or not", () => {
+    const html = `
+<script lang="ts" setup>
+const sayHi = (name: string) => \`hi \${name}\`
+</script>
+<script>
+const sayBye = (name) => "bye " + name
+</script>
+<script setup="">
+const test = ref(1)
+</script>
+<script lang="ts">
+const test1: string = "test"
+</script>
+<script lang="js">
+const test2 = "test2"
+</script>
+    `;
+
+    const ss = select(html).findAll("script[setup]");
+    expect(ss).toHaveLength(2);
+    const traditional = select(html).findAll("script:not([setup])");
+    expect(traditional).toHaveLength(3);
+  });
+  
 
   it("update() and updateAll() utility works as expected", () => {
     const html = `
