@@ -1,6 +1,6 @@
 {
   "name": "@yankeeinlondon/happy-wrapper",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "A functional API surface wrapping happy-dom",
   "author": "Ken Snyder <ken@ken.net>",
   "license": "MIT",
