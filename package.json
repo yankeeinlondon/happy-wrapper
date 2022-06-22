@@ -2,7 +2,6 @@
   "name": "@yankeeinlondon/happy-wrapper",
   "version": "2.1.4",
   "description": "A functional API surface wrapping happy-dom",
-  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -31,6 +30,7 @@
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -47,10 +47,11 @@
   },
   "devDependencies": {
     "@types/node": "^16.11.41",
-    "@typescript-eslint/eslint-plugin": "^5.28.0",
-    "@typescript-eslint/parser": "^5.28.0",
-    "@vitest/ui": "^0.15.1",
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "@vitest/ui": "^0.15.2",
     "bumpp": "^8.2.1",
+    "changelogithub": "^0.7.0",
     "eslint": "^8.18.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-promise": "^6.0.0",
@@ -59,10 +60,7 @@
     "prettier": "^2.7.1",
     "tsup": "^6.1.2",
     "typescript": "^4.7.4",
-    "vitest": "^0.15.1",
+    "vitest": "^0.15.2",
     "vue": "^3.2.37"
-  },
-  "directories": {
-    "test": "test"
   }
 }
