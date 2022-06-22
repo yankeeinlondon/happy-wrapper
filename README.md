@@ -55,7 +55,7 @@ A wrapper around the popular [happy-dom](https://github.com/capricorn86/happy-do
 - Iterate over a selector and mutate the selected nodes
 
     ```ts
-    import { pipe } from "fp-ts/es6/function";
+    import { pipe } from "fp-ts/lib/function";
     return html.updateAll('h1')(el => 
         pipe(
             el,

@@ -1,4 +1,4 @@
-import { pipe } from "fp-ts/es6/function";
+import { pipe } from "fp-ts/lib/function";
 import { describe, expect, it } from "vitest";
 import {
   addClass,

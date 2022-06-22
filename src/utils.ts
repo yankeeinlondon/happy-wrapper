@@ -1,4 +1,4 @@
-import { flow, pipe } from "fp-ts/es6/function";
+import { flow, pipe } from "fp-ts/lib/function";
 import {
   createDocument,
   createElement,
