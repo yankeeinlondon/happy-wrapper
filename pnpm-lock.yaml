@@ -24,7 +24,6 @@ specifiers:
 
 dependencies:
   callsites: 3.1.0
-  fp-ts: 2.12.1
   happy-dom: 5.3.1
   native-dash: 1.22.1
 
@@ -39,6 +38,7 @@ devDependencies:
   eslint-plugin-import: 2.26.0_zgg5sxdhnxsuz2d3vdnwdtmcnu
   eslint-plugin-promise: 6.0.0_eslint@8.18.0
   eslint-plugin-unicorn: 42.0.0_eslint@8.18.0
+  fp-ts: 2.12.1
   npm-run-all: 4.1.5
   prettier: 2.7.1
   tsup: 6.1.2_typescript@4.7.4
@@ -1463,7 +1463,7 @@ packages:
 
   /fp-ts/2.12.1:
     resolution: {integrity: sha512-oxvgqUYR6O9VkKXrxkJ0NOyU0FrE705MeqgBUMEPWyTu6Pwn768cJbHChw2XOBlgFLKfIHxjr2OOBFpv2mUGZw==}
-    dev: false
+    dev: true
 
   /fs-minipass/1.2.7:
     resolution: {integrity: sha512-GWSSJGFy4e9GUeCcbIkED+bgAoFyj7XF1mV8rma3QW4NIqX9Kyx79N/PF61H5udOV3aY1IaMLs6pGbH71nlCTA==}
