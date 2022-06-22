@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/consistent-function-scoping */
-import { identity } from "fp-ts/function";
+import { identity } from "fp-ts/es6/function";
 import { Text, Window } from "happy-dom";
 import { dasherize } from "native-dash";
 import { HappyMishap } from "./errors";

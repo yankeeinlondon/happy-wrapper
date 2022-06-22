@@ -1,12 +1,19 @@
-export { 
-  Document,
+import {
+  Document as HDocument,
   // use of Fragment offers less conflicts which can come into play with DocumentFragment
-  DocumentFragment as Fragment, 
-  DocumentFragment, 
-  IElement, 
-  IText, 
-  INode 
+  DocumentFragment as HDocumentFragment,
+  IElement as HElement,
+  IText as HText,
+  INode as HNode,
 } from "happy-dom";
+
+export type Document = HDocument;
+export type DocumentFragment = HDocumentFragment;
+export type Fragment = HDocumentFragment;
+/** An element in the DOM [happy-dom] */
+export type IElement = HElement;
+export type IText = HText;
+export type INode = HNode;
 
 export * from "./attributes";
 export * from "./create";

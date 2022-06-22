@@ -2,13 +2,36 @@
   "name": "@yankeeinlondon/happy-wrapper",
   "version": "2.1.7",
   "description": "A functional API surface wrapping happy-dom",
-  "author": "Ken Snyder <ken@ken.net>",
+  "keywords": [
+    "dom",
+    "happy-dom"
+  ],
+  "homepage": "https://github.com/yankeeinlondon/happy-wrapper#readme",
+  "bugs": {
+    "url": "https://github.com/yankeeinlondon/happy-wrapper/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yankeeinlondon/happy-wrapper.git"
+  },
   "license": "MIT",
+  "author": "Ken Snyder <ken@ken.net>",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap external",
+    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --clean",
     "watch": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --watch",
     "test": "vitest",
     "test:ui": "vitest ui",
@@ -18,31 +41,8 @@
     "lint:src": "eslint src/**/*.ts --fix",
     "lint:test": "eslint test/**/*.ts --fix"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yankeeinlondon/happy-wrapper.git"
-  },
-  "keywords": [
-    "dom",
-    "happy-dom"
-  ],
-  "bugs": {
-    "url": "https://github.com/yankeeinlondon/happy-wrapper/issues"
-  },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
-    }
-  },
-  "homepage": "https://github.com/yankeeinlondon/happy-wrapper#readme",
   "dependencies": {
     "callsites": "^3.1.0",
-    "fp-ts": "^2.12.1",
     "happy-dom": "^5.3.1",
     "native-dash": "^1.22.1"
   },
@@ -57,6 +57,7 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-unicorn": "^42.0.0",
+    "fp-ts": "^2.12.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
     "tsup": "^6.1.2",
