@@ -1,6 +1,6 @@
 {
   "name": "@yankeeinlondon/happy-wrapper",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "A functional API surface wrapping happy-dom",
   "types": "dist/index.d.ts",
   "files": [
