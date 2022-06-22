@@ -17,11 +17,17 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: npm i -g pnpm @antfu/ni
-      - run: nci
-      - run: nr test --if-present
-      - run: npm publish --access public
+      - name: Install
+        run: nci
+
+      - name: Test
+        run: nr test --if-present
+
+      - name: Publish to NPM
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - run: npx changelogithub
+      - name: Add Changelog Entry
+        run: npx changelogithub
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
