@@ -31,8 +31,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --clean",
-    "watch": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --watch",
+    "build": "tsup src/index.ts --format esm --dts --sourcemap external --clean",
+    "watch": "tsup src/index.ts --format esm --dts --sourcemap external --watch",
     "test": "vitest",
     "test:ui": "vitest ui",
     "prepublishOnly": "npm run build",

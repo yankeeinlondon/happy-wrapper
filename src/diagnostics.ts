@@ -1,4 +1,4 @@
-import { flow, pipe } from "fp-ts/lib/function";
+import { flow, pipe } from "fp-ts/lib/function.js";
 import { getClassList } from "./attributes";
 import { createFragment } from "./create";
 import type {

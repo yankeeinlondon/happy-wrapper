@@ -1,4 +1,4 @@
-import { flow, pipe } from "fp-ts/lib/function";
+import { flow, pipe } from "fp-ts/lib/function.js";
 import {
   createDocument,
   createElement,

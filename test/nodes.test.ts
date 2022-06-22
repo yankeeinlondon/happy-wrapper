@@ -1,4 +1,4 @@
-import { pipe } from "fp-ts/lib/function";
+import { pipe } from "fp-ts/lib/function.js";
 import { describe, expect, it } from "vitest";
 import {
   after,

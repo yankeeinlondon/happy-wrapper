@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/consistent-function-scoping */
-import { pipe } from "fp-ts/lib/function";
+import { pipe } from "fp-ts/lib/function.js";
 import type { IElement } from "./index";
 import type { Events } from "vue";
 import type { INode } from "happy-dom";
