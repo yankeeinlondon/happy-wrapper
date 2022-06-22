@@ -13,6 +13,7 @@
     "watch": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --watch",
     "test": "vitest",
     "test:ui": "vitest ui",
+    "release": "bumpp",
     "lint": "run-p lint:*",
     "lint:src": "eslint src/**/*.ts --fix",
     "lint:test": "eslint test/**/*.ts --fix"
@@ -42,6 +43,7 @@
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "@vitest/ui": "^0.15.1",
+    "bumpp": "^8.2.1",
     "eslint": "^8.18.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-promise": "^6.0.0",
