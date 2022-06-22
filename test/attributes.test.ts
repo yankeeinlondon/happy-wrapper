@@ -1,6 +1,18 @@
-import { pipe } from "fp-ts/lib/function";
+import { pipe } from "fp-ts/function";
 import { describe, expect, it } from "vitest";
-import { addClass, addVueEvent, clone, createDocument, createElement, createFragment, filterClasses, getClassList, removeClass, setAttribute, toHtml } from "../src";
+import {
+  addClass,
+  addVueEvent,
+  clone,
+  createDocument,
+  createElement,
+  createFragment,
+  filterClasses,
+  getClassList,
+  removeClass,
+  setAttribute,
+  toHtml,
+} from "../src";
 
 describe("attributes", () => {
   it("setAttribute() utility", () => {
@@ -23,7 +35,10 @@ describe("attributes", () => {
     const plusOne = pipe(doc, addOne);
     const plusTwo = pipe(clone(plusOne), addTwo);
 
-    expect(pipe(plusOne, getClassList), `Class list from Frag input is: ${pipe(plusOne, getClassList)}`).length(2);
+    expect(
+      pipe(plusOne, getClassList),
+      `Class list from Frag input is: ${pipe(plusOne, getClassList)}`
+    ).length(2);
     expect(pipe(plusOne, getClassList)).contains("one");
     expect(pipe(plusOne, getClassList)).not.contains("two");
 
@@ -38,7 +53,10 @@ describe("attributes", () => {
     const plusOne = pipe(frag, addOne);
     const plusTwo = pipe(clone(plusOne), addTwo);
 
-    expect(pipe(plusOne, getClassList), `Class list from Frag input is: ${pipe(plusOne, getClassList)}`).length(2);
+    expect(
+      pipe(plusOne, getClassList),
+      `Class list from Frag input is: ${pipe(plusOne, getClassList)}`
+    ).length(2);
     expect(pipe(plusOne, getClassList)).contains("one");
     expect(pipe(plusOne, getClassList)).not.contains("two");
 
@@ -74,20 +92,27 @@ describe("attributes", () => {
     expect(pipe(empty, getClassList)).lengthOf(0);
   });
 
-
-
   it("filterClasses() utility removes classes and optionally can pass in a callback", () => {
     const el = '<span class="foo bar baz color-1 color-2 color-3">text</span>';
     const noFoo = pipe(el, createElement, filterClasses("foo"), toHtml);
-    expect(noFoo).toBe('<span class="bar baz color-1 color-2 color-3">text</span>');
+    expect(noFoo).toBe(
+      '<span class="bar baz color-1 color-2 color-3">text</span>'
+    );
 
     let removed: string[] = [];
-    const fancyRemoval = pipe(el, createElement, filterClasses(
-      (r) => {
-        removed = r;
-      },
-      "foo", "bar", /color-/,
-    ), toHtml);
+    const fancyRemoval = pipe(
+      el,
+      createElement,
+      filterClasses(
+        (r) => {
+          removed = r;
+        },
+        "foo",
+        "bar",
+        /color-/
+      ),
+      toHtml
+    );
 
     expect(fancyRemoval).toBe('<span class="baz">text</span>');
     expect(removed).toContain("foo");
@@ -97,7 +122,7 @@ describe("attributes", () => {
     expect(removed).toContain("color-3");
   });
 
-    it("addVueEvent() adds an appropriate v-bind attribute", () => { 
+  it("addVueEvent() adds an appropriate v-bind attribute", () => {
     const html = "<my-component>hello world</my-component>";
     const eventful = addVueEvent("onClick", "doit()")(html);
     expect(eventful, eventful).toContain('v-bind="{');
