@@ -54,6 +54,8 @@ export const describeNode = (
       html: (h) => pipe(h, createFragment, describeNode),
       node: (n) => `node${descClass(n)}`,
       text: (t) => `text[${t.textContent.slice(0, 5).replace("\n", "")}...]`,
+      comment: (t) =>
+        `comment[${t.textContent.slice(0, 5).replace("\n", "")}...]`,
       element: (e) => `element[${e.tagName.toLowerCase()}]${descClass(e)}`,
       fragment: (f) => `fragment${descFrag(f)}`,
       document: (d) =>
@@ -143,6 +145,12 @@ export const inspect = <T extends boolean>(
             children: x.childNodes?.length,
             childContent: x.childNodes?.map((i) => i.textContent),
           }),
+          comment: (c) => ({
+            kind: "IComment node",
+            textContent: c.textContent,
+            children: c.childNodes?.length,
+            childContent: c.childNodes?.map((i) => i.textContent),
+          }),
           element: (x) => ({
             kind: "IElement node",
             tagName: x.tagName,
@@ -225,6 +233,17 @@ export const tree = (node: Container | HTML): Tree => {
             children: n.children.map((c) => summary(c)),
           };
           break;
+        case "comment": {
+          ts = {
+            node: `c(${pipe(
+              n.node.textContent,
+              removeSpecialChars,
+              truncate(10)
+            )})`,
+            children: n.children.map((c) => summary(c)),
+          };
+          break;
+        }
         case "element": {
           const el = n.node as IElement;
           ts = {
@@ -270,7 +289,7 @@ export const tree = (node: Container | HTML): Tree => {
         }
         default:
           ts = {
-            node: "u(?)",
+            node: `u(${n.toString()})`,
             children: n.children.map((c) => summary(c)),
           };
           break;
@@ -313,6 +332,13 @@ export const tree = (node: Container | HTML): Tree => {
             node: t,
             level,
             children: t.childNodes.map((c) => convert(level + 1)(c)),
+          }),
+        comment: (c) =>
+          summarize({
+            type: "comment",
+            node: c,
+            level,
+            children: c.childNodes.map((i) => convert(level + 1)(i)),
           }),
         element: (e) =>
           summarize({

@@ -1,16 +1,22 @@
+/* eslint-disable unicorn/prefer-logical-operator-over-ternary */
 import { createFragment } from "./create";
 import { describeNode, inspect } from "./diagnostics";
 import { HappyMishap } from "./errors";
-import type { 
-  HTML, 
-  MapCallback, 
-  NodeSelector, 
-  UpdateCallback, 
-  UpdateCallback_Native 
+import type {
+  HTML,
+  MapCallback,
+  NodeSelector,
+  UpdateCallback,
+  UpdateCallback_Native,
 } from "./happy-types";
 import { getChildElements } from "./nodes";
-import { isDocument, isElement, isElementLike, isFragment } from "./type-guards";
-import { clone, getNodeType, toHtml } from "./utils"; 
+import {
+  isDocument,
+  isElement,
+  isElementLike,
+  isFragment,
+} from "./type-guards";
+import { clone, getNodeType, toHtml } from "./utils";
 import type { Document, Fragment, IElement, INode, IText } from "./index";
 
 /**
@@ -18,45 +24,66 @@ import type { Document, Fragment, IElement, INode, IText } from "./index";
  * then wrapped and a helpful query and mutation API is provided
  * to work with this DOM element.
  */
-export const select = <D extends Document | Fragment | IElement | HTML>(node: D) => {
+export const select = <D extends Document | Fragment | IElement | HTML>(
+  node: D
+) => {
   const originIsHtml = typeof node === "string";
   const rootNode: Document | Fragment | IElement = originIsHtml
     ? createFragment(node)
     : isElement(node)
-      ? node as IElement
-      : isDocument(node) || isFragment(node)
-        ? node
-        : undefined as never;
+    ? (node as IElement)
+    : isDocument(node) || isFragment(node)
+    ? node
+    : (undefined as never);
 
-  if (!rootNode) {throw new HappyMishap(`Attempt to select() an invalid node type: ${getNodeType(node)}`, { name: "select(INode)", inspect: node });};
+  if (!rootNode) {
+    throw new HappyMishap(
+      `Attempt to select() an invalid node type: ${getNodeType(node)}`,
+      { name: "select(INode)", inspect: node }
+    );
+  }
 
   type T = undefined extends D ? Fragment : D extends string ? "html" : D;
   const api: NodeSelector<T> = {
     type: () => {
-      return originIsHtml
-        ? "html"
-        : getNodeType(rootNode);
+      return originIsHtml ? "html" : getNodeType(rootNode);
     },
 
     findAll: <S extends string | undefined>(sel: S) => {
       return sel
-        ? rootNode.querySelectorAll(sel) as IElement[]
+        ? (rootNode.querySelectorAll(sel) as IElement[])
         : getChildElements(rootNode);
     },
 
     findFirst: <E extends string | undefined>(
       sel: string,
-      errorMsg?: E): undefined extends E ? IElement | null : IElement => {
+      errorMsg?: E
+    ): undefined extends E ? IElement | null : IElement => {
       const result = rootNode.querySelector(sel) as IElement | null;
-      if (!result && errorMsg) {throw new HappyMishap(`${errorMsg}.\n\nThe HTML from the selected DOM node is:\n${toHtml(rootNode)}`, { name: "select.findFirst()", inspect: rootNode });};
+      if (!result && errorMsg) {
+        throw new HappyMishap(
+          `${errorMsg}.\n\nThe HTML from the selected DOM node is:\n${toHtml(
+            rootNode
+          )}`,
+          { name: "select.findFirst()", inspect: rootNode }
+        );
+      }
 
       return result as undefined extends E ? IElement | null : IElement;
     },
 
-    append: (content: (IText | IElement | HTML | undefined) | (IText | IElement | HTML | undefined)[]) => {
-      if (!content) {return api;};
+    append: (
+      content:
+        | (IText | IElement | HTML | undefined)
+        | (IText | IElement | HTML | undefined)[]
+    ) => {
+      if (!content) {
+        return api;
+      }
 
-      const nodes = !Array.isArray(content) ? [content] : content.filter(Boolean) as (INode | HTML)[];
+      const nodes = !Array.isArray(content)
+        ? [content]
+        : (content.filter(Boolean) as (INode | HTML)[]);
       rootNode.append(...nodes);
 
       return api;
@@ -75,61 +102,80 @@ export const select = <D extends Document | Fragment | IElement | HTML>(node: D)
      * throw an error by setting "errorIfFound" to `true` or as a string if
      * you want to state the error message.
      */
-    update: (
-      selection?: string,
-      errorIfNotFound: boolean | string = false,
-    ) => <CB extends UpdateCallback>(
-      mutate: CB,
-    ): NodeSelector<T> => {
-      const el = selection
-        ? rootNode?.querySelector(selection) as IElement | null
-        : isElement(rootNode)
+    update:
+      (selection?: string, errorIfNotFound: boolean | string = false) =>
+      <CB extends UpdateCallback>(mutate: CB): NodeSelector<T> => {
+        const el = selection
+          ? (rootNode?.querySelector(selection) as IElement | null)
+          : isElement(rootNode)
           ? rootNode
           : rootNode.firstElementChild
-            ? rootNode.firstElementChild
-            : null;
+          ? rootNode.firstElementChild
+          : null;
 
-      if (el) {
-        let elReplacement: IElement | false;
-        try {
-          elReplacement = (mutate as unknown as UpdateCallback_Native)(el, 0, 1);
-        } catch (error) {
-          throw new HappyMishap(
-            `update(): the passed in callback to select(container).update('${selection}')():  \n\n\tmutate(${describeNode(el)}, 0, 1)\n\n${error instanceof Error ? error.message : String(error)}.`, 
-            { 
-              name: `select(${typeof rootNode}).updateAll(${selection})(mutation fn)`, inspect: el 
-            }
-          );
+        if (el) {
+          let elReplacement: IElement | false;
+          try {
+            elReplacement = (mutate as unknown as UpdateCallback_Native)(
+              el,
+              0,
+              1
+            );
+          } catch (error) {
+            throw new HappyMishap(
+              `update(): the passed in callback to select(container).update('${selection}')():  \n\n\tmutate(${describeNode(
+                el
+              )}, 0, 1)\n\n${
+                error instanceof Error ? error.message : String(error)
+              }.`,
+              {
+                name: `select(${typeof rootNode}).updateAll(${selection})(mutation fn)`,
+                inspect: el,
+              }
+            );
+          }
+
+          if (elReplacement === false) {
+            el.remove();
+          } else if (!isElement(elReplacement)) {
+            throw new HappyMishap(
+              `The return value for a call to select(${getNodeType(
+                rootNode
+              )}).update(${selection}) return an invalid value! Value return values are an IElement or false.`,
+              { name: "select.update", inspect: el }
+            );
+          }
+        } else {
+          if (errorIfNotFound) {
+            throw new HappyMishap(
+              errorIfNotFound === true
+                ? `The selection "${selection}" was not found so the update() operation wasn't able to be run`
+                : errorIfNotFound,
+              {
+                name: `select(${selection}).update(sel)`,
+                inspect: ["parent node", rootNode],
+              }
+            );
+          }
+
+          if (!selection) {
+            throw new HappyMishap(
+              `Call to select(container).update() was intended to target the root node of the selection but nothing was selected! This shouldn\'t really happen ... the rootNode\'s type is ${typeof rootNode}${
+                typeof rootNode === "object"
+                  ? `, 
+            ${getNodeType(rootNode)} [element-like: ${isElementLike(
+                      rootNode
+                    )}, element: ${isElement(rootNode)}, children: ${
+                      rootNode.childNodes.length
+                    }]`
+                  : ""
+              }`
+            );
+          }
         }
 
-        if (elReplacement === false) {
-          el.remove();
-        } else if (!isElement(elReplacement)) {
-          throw new HappyMishap(`The return value for a call to select(${getNodeType(rootNode)}).update(${selection}) return an invalid value! Value return values are an IElement or false.`, { name: "select.update", inspect: el });
-        } 
-        
-      } else {
-        if (errorIfNotFound) {
-            throw new HappyMishap(errorIfNotFound === true
-              ? `The selection "${selection}" was not found so the update() operation wasn't able to be run`
-              : errorIfNotFound,
-            {
-              name: `select(${selection}).update(sel)`,
-              inspect: ["parent node", rootNode],
-            });
-        }
-
-        if (!selection) {
-          throw new HappyMishap(
-            `Call to select(container).update() was intended to target the root node of the selection but nothing was selected! This shouldn\'t really happen ... the rootNode\'s type is ${typeof rootNode}${typeof rootNode === "object" ? `, 
-            ${getNodeType(rootNode)} [element-like: ${isElementLike(rootNode)}, element: ${isElement(rootNode)}, children: ${rootNode.childNodes.length}]` : ""}`
-          );
-        }
-
-      }
-
-      return api;
-    },
+        return api;
+      },
 
     /**
      * mutate _all_ nodes with given selector; if no selector provided then
@@ -139,45 +185,67 @@ export const select = <D extends Document | Fragment | IElement | HTML>(node: D)
      * if nothing is passed in then you'll get the array of `IElement` nodes which
      * are direct descendants of the root selector.
      */
-    updateAll: <S extends string | undefined>(
-      selection?: S,
-    ) => <CB extends UpdateCallback>(
-      mutate: CB,
-    ): NodeSelector<T> => {
-      /**
-        * The array of DOM nodes which have been selected.
-        */
-      const elements: IElement[] = (
-        selection
-          ? rootNode.querySelectorAll(selection)
-          : getChildElements(rootNode)
-      ) as IElement[];
+    updateAll:
+      <S extends string | undefined>(selection?: S) =>
+      <CB extends UpdateCallback>(mutate: CB): NodeSelector<T> => {
+        /**
+         * The array of DOM nodes which have been selected.
+         */
+        const elements: IElement[] = (
+          selection
+            ? rootNode.querySelectorAll(selection)
+            : getChildElements(rootNode)
+        ) as IElement[];
 
-      for (const [idx, el] of elements.entries()) {
-        if (isElement(el)) {
-          let elReplacement: IElement | false;
-          try {
-            elReplacement = (mutate as unknown as UpdateCallback_Native)(el, idx, elements.length);
-          } catch (error) {
-            throw new HappyMishap(`updateAll(): the passed in callback to select(container).updateAll('${selection}')():  \n\n\tmutate(${describeNode(el)}, ${idx} idx, ${elements.length} elements)\n\n${error instanceof Error ? error.message : String(error)}.`, { name: `select(${typeof rootNode}).updateAll(${selection})(mutation fn)`, inspect: el });
-          }
-          // an explicit `false` return indicates the intent to remove
-          if (elReplacement === false) {
-            el.remove();
-          } else if (!isElement(elReplacement)) {
-            // an element returned is the expected return but if not then throw an error
-            throw new HappyMishap(
-              `The return value from the "select(container).updateAll('${selection}')(${describeNode(el)}, ${idx} idx, ${elements.length} elements)" call was invalid! Valid return values are FALSE or an IElement but instead got: ${typeof elReplacement}.`, 
-              { name: "select().updateAll -> invalid return value" }
+        for (const [idx, el] of elements.entries()) {
+          if (isElement(el)) {
+            let elReplacement: IElement | false;
+            try {
+              elReplacement = (mutate as unknown as UpdateCallback_Native)(
+                el,
+                idx,
+                elements.length
+              );
+            } catch (error) {
+              throw new HappyMishap(
+                `updateAll(): the passed in callback to select(container).updateAll('${selection}')():  \n\n\tmutate(${describeNode(
+                  el
+                )}, ${idx} idx, ${elements.length} elements)\n\n${
+                  error instanceof Error ? error.message : String(error)
+                }.`,
+                {
+                  name: `select(${typeof rootNode}).updateAll(${selection})(mutation fn)`,
+                  inspect: el,
+                }
+              );
+            }
+            // an explicit `false` return indicates the intent to remove
+            if (elReplacement === false) {
+              el.remove();
+            } else if (!isElement(elReplacement)) {
+              // an element returned is the expected return but if not then throw an error
+              throw new HappyMishap(
+                `The return value from the "select(container).updateAll('${selection}')(${describeNode(
+                  el
+                )}, ${idx} idx, ${
+                  elements.length
+                } elements)" call was invalid! Valid return values are FALSE or an IElement but instead got: ${typeof elReplacement}.`,
+                { name: "select().updateAll -> invalid return value" }
+              );
+            }
+          } else {
+            throw new Error(
+              `Ran into an unknown node type while running updateAll(): ${JSON.stringify(
+                inspect(el),
+                null,
+                2
+              )}`
             );
-          };
-        } else {
-          throw new Error(`Ran into an unknown node type while running updateAll(): ${JSON.stringify(inspect(el), null, 2)}`);
+          }
         }
-      };
 
-      return api;
-    },
+        return api;
+      },
 
     /**
      * Maps over all IElement's which match the selection criteria (or all child
@@ -188,7 +256,8 @@ export const select = <D extends Document | Fragment | IElement | HTML>(node: D)
      * call to `select(dom)` and returns the map results to the caller instead of
      * continuing the selection API surface.
      */
-    mapAll: <S extends string | undefined>(selection?: S) =>
+    mapAll:
+      <S extends string | undefined>(selection?: S) =>
       <M extends MapCallback<IElement, any>>(mutate: M) => {
         const collection: ReturnType<M>[] = [];
         const elements: IElement[] = selection
@@ -207,25 +276,26 @@ export const select = <D extends Document | Fragment | IElement | HTML>(node: D)
      * a particular DOM query. Also allows passing in an optional callback to
      * receive elements which were filtered out
      */
-    filterAll: <S extends string>(selection: S, cb?: ((removed: IElement) => void)) => {
+    filterAll: <S extends string>(
+      selection: S,
+      cb?: (removed: IElement) => void
+    ) => {
       for (const el of rootNode?.querySelectorAll(selection)) {
-        if (cb) {cb(el);};
+        if (cb) {
+          cb(el);
+        }
         el.remove();
-      };
+      }
 
       return api;
     },
 
     toContainer: () => {
-      return (
-        originIsHtml
-          ? toHtml(rootNode)
-          : rootNode
-      ) as undefined extends T
+      return (originIsHtml ? toHtml(rootNode) : rootNode) as undefined extends T
         ? Fragment
         : T extends "html"
-          ? string
-          : T;
+        ? string
+        : T;
     },
   };
 

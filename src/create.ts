@@ -1,12 +1,12 @@
 /* eslint-disable unicorn/consistent-function-scoping */
 import { identity } from "fp-ts/lib/function.js";
-import { Text, Window } from "happy-dom";
+import { Comment, Text, Window } from "happy-dom";
 import { dasherize } from "native-dash";
 import { HappyMishap } from "./errors";
 import type { Container, HTML } from "./happy-types";
 import { isElement, isElementLike, isTextNodeLike } from "./type-guards";
 import { clone, solveForNodeType, toHtml } from "./utils";
-import type { Document, Fragment, IElement, IText } from "./index";
+import type { Document, Fragment, IComment, IElement, IText } from "./index";
 
 /**
  * Converts an HTML string into a Happy DOM document tree
@@ -74,6 +74,10 @@ export function createTextNode(text?: string): IText {
   }
 }
 
+export function createCommentNode(comment?: string): IComment {
+  return new Comment(comment) as IComment;
+}
+
 /**
  * Creates an element node and can preserve parent relationship if known
  */
@@ -115,6 +119,12 @@ export const createElement = (
         throw new HappyMishap(
           "An IElement can not be created from a IText node because element's require a wrapping tag name!",
           { name: "createElement(text)", inspect: t }
+        );
+      },
+      comment: (t) => {
+        throw new HappyMishap(
+          "An IElement can not be created from a IComment node because element's require a wrapping tag name!",
+          { name: "createElement(comment)", inspect: t }
         );
       },
       fragment: (f) => {

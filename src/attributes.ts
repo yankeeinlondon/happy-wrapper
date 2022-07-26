@@ -45,6 +45,7 @@ export const setAttribute =
         html: (h) =>
           pipe(h, createFragment, (f) => setAttribute(attr)(value)(f), toHtml),
         text: (t) => invalidNode(t),
+        comment: (t) => invalidNode(t),
         node: (n) => invalidNode(n),
         fragment: (f) => {
           f.firstElementChild.setAttribute(attr, value);
@@ -64,7 +65,7 @@ export const setAttribute =
   };
 
 export const getAttribute = <T extends string>(attr: T): GetAttribute<T> => {
-  return solveForNodeType("text", "node")
+  return solveForNodeType("text", "node", "comment")
     .outputType<string>()
     .solver({
       html: (h) => pipe(h, createFragment, getAttribute(attr)),
@@ -94,6 +95,12 @@ export const getClassList = (container: Container | HTML | null): string[] => {
       element: (e) => getClass(e)?.split(/\s+/) || [],
       text: (n) => {
         throw new HappyMishap("Passed in a text node to getClassList!", {
+          name: "getClassList",
+          inspect: n,
+        });
+      },
+      comment: (n) => {
+        throw new HappyMishap("Passed in a comment node to getClassList!", {
           name: "getClassList",
           inspect: n,
         });
@@ -243,6 +250,7 @@ export const hasParentElement = (node: ContainerOrHtml) => {
     .solver({
       html: () => false,
       text: (t) => !!t.parentElement,
+      comment: (t) => !!t.parentElement,
       element: (e) => !!e.parentElement,
       fragment: (f) => !!f.parentElement,
       document: () => true,

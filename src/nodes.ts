@@ -162,7 +162,7 @@ export const append = <N extends ContainerOrHtml[]>(...nodes: N | N[]) => {
   return <P extends UpdateSignature | ContainerOrHtml>(
     parent: P
   ): P extends Array<any> ? IElement : P => {
-    const result = solveForNodeType("text", "node")
+    const result = solveForNodeType("text", "node", "comment")
       .mirror()
       .solver({
         html: (h) => pipe(h, createElement, append(...nodes), toHtml),
@@ -360,6 +360,12 @@ export const changeTagName =
             { inspect: t, name: "changeTagName(IText)" }
           );
         },
+        comment: (t) => {
+          throw new HappyMishap(
+            "Attempt to change a tag name for a IComment node. This is not allowed.",
+            { inspect: t, name: "changeTagName(IComment)" }
+          );
+        },
         node: (n) => {
           throw new HappyMishap(
             "Attempt to change a generic INode node's tag name. This is not allowed.",
@@ -485,6 +491,13 @@ export const before =
           t.before(beforeNormalized);
           return t;
         },
+        comment: (t) => {
+          if (!t.parentElement) {
+            throw noParent(t);
+          }
+          t.before(beforeNormalized);
+          return t;
+        },
         node: (n) => invalidType(n),
         document: (d) => {
           d.body.prepend(beforeNormalized);
@@ -533,6 +546,7 @@ export const after =
       .solver({
         html: (h) => pipe(h, createFragment, after(afterNode), toHtml),
         text: (t) => invalidType(t),
+        comment: (t) => invalidType(t),
         node: (n) => invalidType(n),
         document: (d) => {
           d.body.append(afterNormalized);

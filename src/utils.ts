@@ -1,5 +1,6 @@
 import { flow, pipe } from "fp-ts/lib/function.js";
 import {
+  createCommentNode,
   createDocument,
   createElement,
   createFragment,
@@ -23,11 +24,34 @@ import {
 } from "./type-guards";
 
 /**
+ * Use the self-reported numeric type that a node presents
+ * to identify what type it is.
+ */
+export const nodeTypeLookup = (type: number): NodeType | undefined => {
+  switch (type) {
+    case 1:
+      return "element";
+    case 3:
+      return "text";
+    case 8:
+      return "comment";
+    case 11:
+      return "fragment";
+  }
+};
+
+/**
  * Determines the "content-type" of a given node
  */
 export const getNodeType = (node: Container | HTML): NodeType => {
   if (typeof node === "string") {
     return "html";
+  }
+
+  const byType = nodeTypeLookup(node.nodeType);
+
+  if (byType) {
+    return byType;
   }
 
   return isTextNode(node)
@@ -101,6 +125,7 @@ export function toHtml<D extends ContainerOrHtml | ContainerOrHtml[] | null>(
         .solver({
           html: (h) => h,
           text: (t) => t.textContent,
+          comment: (h) => `<!-- ${h.textContent} -->`,
           element: (e) => e.outerHTML,
           node: (ne) => {
             if (isElement(ne)) {
@@ -163,10 +188,11 @@ export function clone<T extends Container | HTML>(container: T): T {
         return createDocument(d.body.innerHTML, d.head.innerHTML);
       },
       element: (e) => pipe(e, toHtml, createElement),
-      node: flow(toHtml, createFragment, (f) =>
-        f.firstElementChild ? f.firstElementChild : f.firstChild
-      ),
+      node: (n) => {
+        throw new HappyMishap("Can't clone an unknown node!", { inspect: n });
+      },
       text: flow(toHtml, createTextNode),
+      comment: flow(toHtml, createCommentNode),
     });
 
   return clone(container);
