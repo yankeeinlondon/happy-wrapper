@@ -220,6 +220,17 @@ export interface NodeSelector<T extends Container | "html"> {
   filterAll: <S extends string>(selection: S) => NodeSelector<T>;
 
   /**
+   * Wraps the current _selection_ with an Element or Fragment.
+   *
+   * You may optionally add a prefix to the error message thrown if the
+   * wrapper does not represent a valid block/wrapper element.
+   */
+  wrap: <C extends IElement | string>(
+    wrapper: C,
+    errMsg?: string
+  ) => NodeSelector<T>;
+
+  /**
    * Returns the root node with all mutations included
    */
   toContainer: () => undefined extends T

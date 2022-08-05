@@ -572,8 +572,11 @@ export const after =
       })(beforeNode);
   };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type ReadyForWrapper<C extends UpdateSignature | ContainerOrHtml[]> = <
+/**
+ * A payload which is a partial application of the `wrap()` method and expects
+ * to no w receive the parent element.
+ */
+export type ReadyForWrapper<_C extends UpdateSignature | ContainerOrHtml[]> = <
   P extends DocRoot | IElement | HTML | undefined
 >(
   parent: P

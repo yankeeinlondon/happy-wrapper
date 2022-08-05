@@ -1,20 +1,22 @@
 /* eslint-disable unicorn/prefer-logical-operator-over-ternary */
-import { createFragment } from "./create";
+import { createElement, createFragment } from "./create";
 import { describeNode, inspect } from "./diagnostics";
 import { HappyMishap } from "./errors";
 import type {
+  ContainerOrHtml,
   HTML,
   MapCallback,
   NodeSelector,
   UpdateCallback,
   UpdateCallback_Native,
 } from "./happy-types";
-import { getChildElements } from "./nodes";
+import { getChildElements, into, wrap } from "./nodes";
 import {
   isDocument,
   isElement,
   isElementLike,
   isFragment,
+  isHappyWrapperError,
 } from "./type-guards";
 import { clone, getNodeType, toHtml } from "./utils";
 import type { Document, Fragment, IElement, INode, IText } from "./index";
@@ -28,7 +30,7 @@ export const select = <D extends Document | Fragment | IElement | HTML>(
   node: D
 ) => {
   const originIsHtml = typeof node === "string";
-  const rootNode: Document | Fragment | IElement = originIsHtml
+  let rootNode: Document | Fragment | IElement = originIsHtml
     ? createFragment(node)
     : isElement(node)
     ? (node as IElement)
@@ -288,6 +290,25 @@ export const select = <D extends Document | Fragment | IElement | HTML>(
       }
 
       return api;
+    },
+
+    wrap: (wrapper, errMsg) => {
+      try {
+        const safeWrap: IElement =
+          typeof wrapper === "string" ? createElement(wrapper) : wrapper;
+        rootNode = wrap(rootNode)(safeWrap);
+
+        return api;
+      } catch (error) {
+        if (isHappyWrapperError(error) || error instanceof Error) {
+          error.message = errMsg
+            ? `Error calling select.wrap(): ${errMsg}\n${error.message}`
+            : `Error calling select.wrap():\n${(error as Error).message}`;
+          throw error;
+        }
+
+        throw error;
+      }
     },
 
     toContainer: () => {

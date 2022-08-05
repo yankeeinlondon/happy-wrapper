@@ -6,6 +6,8 @@ import {
   createFragment,
   IElement,
   inspect,
+  isElement,
+  isHappyWrapperError,
   select,
   toHtml,
   tree,
@@ -107,5 +109,60 @@ const test2 = "test2"
 
     expect(missing).toBe(null);
     expect(bunchANothing).toHaveLength(0);
+  });
+
+  it("wrap() utility on an HTML selection works", () => {
+    const html = '<span class="foo bar">foobar</span>';
+    const wrapper = '<div class="wrapper">';
+    const s = select(html).wrap(wrapper);
+
+    expect(s.toContainer()).toBe(`${wrapper}${html}</div>`);
+  });
+
+  it("wrap() utility on an Element selection works", () => {
+    const html = createElement('<span class="foo bar">foobar</span>');
+    const wrapper = '<div class="wrapper">';
+    const s = select(html).wrap(wrapper);
+
+    expect(
+      isElement(s.toContainer()),
+      "when the selection is an element it should maintain it's type even if wrapper was an HTML string"
+    ).toBeTruthy();
+
+    expect(toHtml(s.toContainer())).toBe(`${wrapper}${html}</div>`);
+
+    const s2 = select(html).wrap(createElement(wrapper));
+
+    expect(
+      isElement(s2.toContainer()),
+      "when the selection is an element as well as the wrapper it should work the same as when getting an HTML wrapper"
+    ).toBeTruthy();
+
+    expect(toHtml(s2.toContainer())).toBe(`${wrapper}${html}</div>`);
+  });
+
+  it("when using wrap() utility but passing in a non-block element, error is produced", () => {
+    const html = '<span class="foo bar">foobar</span>';
+    const wrapper = "hello world";
+    try {
+      select(html).wrap(wrapper);
+      throw new Error("An invalid wrapper should not be accepted");
+    } catch (error) {
+      expect(isHappyWrapperError(error)).toBeTruthy();
+      if (isHappyWrapperError(error)) {
+        expect(error.message).toContain("select.wrap()");
+      }
+    }
+
+    try {
+      select(html).wrap(wrapper, "end of days");
+      throw new Error("An invalid wrapper should not be accepted");
+    } catch (error) {
+      expect(isHappyWrapperError(error)).toBeTruthy();
+      if (isHappyWrapperError(error)) {
+        expect(error.message).toContain("select.wrap()");
+        expect(error.message).toContain("end of days");
+      }
+    }
   });
 });
