@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-logical-operator-over-ternary */
 import { pipe } from "fp-ts/lib/function.js";
 import { HappyMishap } from "./errors";
 import {
