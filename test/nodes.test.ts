@@ -261,10 +261,6 @@ describe("nodes", () => {
     expect(toHtml(toDiv(createElement(html)))).toBe(
       '<div class="foobar">hello world</div>'
     );
-    // fragment
-    expect(toHtml(toDiv(createFragment(html)))).toBe(
-      '<div class="foobar">hello world</div>'
-    );
   });
 
   it("changeTag() can preserve parent node", () => {

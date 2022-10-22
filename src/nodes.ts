@@ -380,9 +380,16 @@ export const changeTagName =
 
         fragment: (f) => {
           if (f.firstElementChild) {
-            f.firstElementChild.replaceWith(
-              changeTagName(tagName)(f.firstElementChild)
-            );
+            if (f.firstElementChild.parentElement) {
+              f.firstElementChild.replaceWith(
+                changeTagName(tagName)(f.firstElementChild)
+              );
+            } else {
+              throw new HappyMishap(
+                "Fragment's first child node must have a parent node to change the tag name!",
+                { name: "changeTagName(Fragment)", inspect: f }
+              );
+            }
           } else {
             throw new HappyMishap(
               "Fragment passed into changeTagName() has no elements as children!",

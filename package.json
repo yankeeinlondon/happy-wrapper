@@ -45,28 +45,28 @@
     "native-dash": "^1.23.2"
   },
   "peerDependencies": {
-    "happy-dom": "^6.0.4"
+    "happy-dom": "^7.6.0"
   },
   "devDependencies": {
-    "@types/node": "^16.11.47",
-    "@typescript-eslint/eslint-plugin": "^5.32.0",
-    "@typescript-eslint/parser": "^5.32.0",
-    "@vitest/ui": "^0.20.3",
+    "@types/node": "^16.11.68",
+    "@typescript-eslint/eslint-plugin": "^5.40.1",
+    "@typescript-eslint/parser": "^5.40.1",
+    "@vitest/ui": "^0.24.3",
     "bumpp": "^8.2.1",
     "callsites": "^4.0.0",
     "changelogithub": "^0.12.4",
-    "eslint": "^8.21.0",
+    "eslint": "^8.26.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-unicorn": "^43.0.2",
-    "fp-ts": "^2.12.2",
-    "happy-dom": "^6.0.4",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-unicorn": "^44.0.2",
+    "fp-ts": "^2.13.1",
+    "happy-dom": "^7.6.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
-    "tsup": "^6.2.1",
-    "typescript": "^4.7.4",
-    "vite": "^3.0.4",
-    "vitest": "^0.20.3",
-    "vue": "^3.2.37"
+    "tsup": "^6.3.0",
+    "typescript": "^4.8.4",
+    "vite": "^3.1.8",
+    "vitest": "^0.24.3",
+    "vue": "^3.2.41"
   }
 }
