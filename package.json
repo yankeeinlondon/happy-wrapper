@@ -40,7 +40,8 @@
     "release": "bumpp",
     "lint": "run-p lint:*",
     "lint:src": "eslint src/**/*.ts --fix",
-    "lint:test": "eslint test/**/*.ts --fix"
+    "lint:test": "eslint test/**/*.ts --fix",
+    "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
     "happy-dom": "^7.6.7",

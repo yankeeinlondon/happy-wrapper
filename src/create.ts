@@ -4,21 +4,21 @@ import { Comment, Text, Window } from "happy-dom";
 import { dasherize } from "native-dash";
 import { HappyMishap } from "./errors";
 import type { Container, HTML } from "./happy-types";
+import type { HappyDoc, Fragment, IComment, IElement, IText } from "./index";
 import { isElement, isElementLike, isTextNodeLike } from "./type-guards";
 import { clone, solveForNodeType, toHtml } from "./utils";
-import type { Document, Fragment, IComment, IElement, IText } from "./index";
 
 /**
  * Converts an HTML string into a Happy DOM document tree
  */
-export function createDocument(body: string, head?: string): Document {
+export function createDocument(body: string, head?: string): HappyDoc {
   const window = new Window();
   const document = window.document;
   document.body.innerHTML = body;
   if (head) {
     document.head.innerHTML = head;
   }
-  return document;
+  return document as HappyDoc;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -28,7 +28,7 @@ export function createFragment<C extends Container | HTML>(
   content?: C
 ): FragmentFrom<C extends string ? "html" : Fragment> {
   const window = new Window();
-  const document = window.document;
+  const document = window.document as HappyDoc;
   const fragment = document.createDocumentFragment() as Fragment;
   if (content) {
     fragment.append(clone(content));

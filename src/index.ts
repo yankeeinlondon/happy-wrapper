@@ -9,6 +9,7 @@ import {
 } from "happy-dom";
 
 export type Document = HDocument;
+export type HappyDoc = HDocument;
 export type DocumentFragment = HDocumentFragment;
 export type Fragment = HDocumentFragment;
 /** An element in the DOM [happy-dom] */

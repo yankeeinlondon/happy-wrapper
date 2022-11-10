@@ -17,18 +17,18 @@ import {
   isHappyWrapperError,
 } from "./type-guards";
 import { clone, getNodeType, toHtml } from "./utils";
-import type { Document, Fragment, IElement, INode, IText } from "./index";
+import type { HappyDoc, Fragment, IElement, INode, IText } from "./index";
 
 /**
  * Allows the _selection_ of HTML or a container type which is
  * then wrapped and a helpful query and mutation API is provided
  * to work with this DOM element.
  */
-export const select = <D extends Document | Fragment | IElement | HTML>(
+export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
   node: D
 ) => {
   const originIsHtml = typeof node === "string";
-  let rootNode: Document | Fragment | IElement = originIsHtml
+  let rootNode: HappyDoc | Fragment | IElement = originIsHtml
     ? createFragment(node)
     : isElement(node)
     ? (node as IElement)

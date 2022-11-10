@@ -20,7 +20,7 @@ import {
   isUpdateSignature,
 } from "./type-guards";
 import { getNodeType, solveForNodeType, toHtml } from "./utils";
-import type { Document, Fragment, IElement, INode } from "./index";
+import type { HappyDoc, Fragment, IElement, INode } from "./index";
 
 function descClass(n: Container) {
   const list = getClassList(n);
@@ -277,7 +277,7 @@ export const tree = (node: Container | HTML): Tree => {
           break;
         }
         case "document": {
-          const d = n.node as Document;
+          const d = n.node as HappyDoc;
           ts = {
             node: `doc(${
               isElementLike(d)

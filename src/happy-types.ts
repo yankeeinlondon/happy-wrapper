@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import type { getNodeType } from "./utils";
 import type {
-  Document,
+  HappyDoc,
   Fragment,
   IComment,
   IElement,
@@ -25,7 +25,7 @@ export type NodeTypeInput<T extends ReturnType<typeof getNodeType>> =
     : T extends "element"
     ? IElement
     : T extends "document"
-    ? Document
+    ? HappyDoc
     : T;
 
 /** The distinct types of Nodes we may encounter */
@@ -49,12 +49,12 @@ export type NodeSolverInput<T extends NodeType> = T extends "html"
   : T extends "node"
   ? INode
   : T extends "document"
-  ? Document
+  ? HappyDoc
   : T extends "fragment"
   ? Fragment
   : unknown;
 
-export type DocRoot = Document | Fragment;
+export type DocRoot = HappyDoc | Fragment;
 export type DomNode = IElement | IText | IComment | INode;
 export type Container = DocRoot | DomNode;
 export type ContainerOrHtml = Container | HTML;
@@ -118,7 +118,7 @@ export interface NodeSolverDict<O> {
   ) => O extends "mirror" ? IElement : O;
   comment: (input: IComment) => O extends "mirror" ? IComment : O;
   node: (input: INode) => O extends "mirror" ? INode : O;
-  document: (input: Document) => O extends "mirror" ? Document : O;
+  document: (input: HappyDoc) => O extends "mirror" ? HappyDoc : O;
   fragment: (input: Fragment) => O extends "mirror" ? Fragment : O;
 }
 

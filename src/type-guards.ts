@@ -7,7 +7,7 @@ import type {
   UpdateSignature,
 } from "./happy-types";
 import type { HappyMishap } from "./errors";
-import type { Document, Fragment, IElement, IText } from "./index";
+import type { Fragment, HappyDoc, IElement, IText } from "./index";
 
 export function isHappyWrapperError(err: unknown): err is HappyMishap {
   return typeof err === "object" && (err as any).kind === "HappyWrapper";
@@ -22,7 +22,7 @@ export const isInspectionTuple = (thing: unknown): thing is InspectionTuple => {
   );
 };
 
-export function isDocument(dom: unknown): dom is Document {
+export function isDocument(dom: unknown): dom is HappyDoc {
   return (
     typeof dom === "object" && dom !== null && !isElement(dom) && "body" in dom
   );

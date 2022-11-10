@@ -26,9 +26,9 @@ import {
 import { clone, getNodeType, solveForNodeType, toHtml } from "./utils";
 import {
   addClass,
-  Document,
   Fragment,
   getClassList,
+  HappyDoc,
   IElement,
   IText,
 } from "./index";
@@ -308,7 +308,7 @@ export const into =
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type ChangeTagNameTo<T extends string> = <
-  E extends [IElement | HTML | Document | Fragment] | UpdateSignature
+  E extends [IElement | HTML | HappyDoc | Fragment] | UpdateSignature
 >(
   ...el: E
 ) => E extends UpdateSignature ? IElement : E;
@@ -323,7 +323,7 @@ export type ChangeTagNameTo<T extends string> = <
  */
 export const changeTagName =
   <T extends string>(tagName: T): ChangeTagNameTo<T> =>
-  <A extends [IElement | HTML | Document | Fragment] | UpdateSignature>(
+  <A extends [IElement | HTML | HappyDoc | Fragment] | UpdateSignature>(
     ...args: A
   ): A extends UpdateSignature ? IElement : A => {
     const node = args[0];
@@ -434,7 +434,7 @@ export const prepend =
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type Before<_T extends ContainerOrHtml> = <
-  A extends [IElement | HTML | Document | Fragment] | UpdateSignature
+  A extends [IElement | HTML | HappyDoc | Fragment] | UpdateSignature
 >(
   ...afterNode: A
 ) => A extends UpdateSignature ? IElement : A extends string ? string : A;
@@ -451,7 +451,7 @@ export type Before<_T extends ContainerOrHtml> = <
  */
 export const before =
   <B extends ContainerOrHtml>(beforeNode: B): Before<B> =>
-  <A extends [IElement | HTML | Document | Fragment] | UpdateSignature>(
+  <A extends [IElement | HTML | HappyDoc | Fragment] | UpdateSignature>(
     ...afterNode: A
   ): A extends UpdateSignature ? IElement : A extends string ? string : A => {
     const outputIsHtml = typeof afterNode[0] === "string";
