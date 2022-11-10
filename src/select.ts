@@ -4,7 +4,6 @@ import { describeNode, inspect } from "./diagnostics";
 import { HappyMishap } from "./errors";
 import type {
   HTML,
-  MapCallback,
   NodeSelector,
   UpdateCallback,
   UpdateCallback_Native,

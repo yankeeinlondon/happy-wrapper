@@ -29,14 +29,18 @@ import {
  */
 export const nodeTypeLookup = (type: number): NodeType | undefined => {
   switch (type) {
-    case 1:
+    case 1: {
       return "element";
-    case 3:
+    }
+    case 3: {
       return "text";
-    case 8:
+    }
+    case 8: {
       return "comment";
-    case 11:
+    }
+    case 11: {
       return "fragment";
+    }
   }
 };
 

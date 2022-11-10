@@ -223,7 +223,7 @@ export const tree = (node: Container | HTML): Tree => {
     const summary = (n: Omit<Tree, "summary">): TreeSummary => {
       let ts: TreeSummary;
       switch (n.type) {
-        case "text":
+        case "text": {
           ts = {
             node: `t(${pipe(
               n.node.textContent,
@@ -233,6 +233,7 @@ export const tree = (node: Container | HTML): Tree => {
             children: n.children.map((c) => summary(c)),
           };
           break;
+        }
         case "comment": {
           ts = {
             node: `c(${pipe(
@@ -287,12 +288,13 @@ export const tree = (node: Container | HTML): Tree => {
           };
           break;
         }
-        default:
+        default: {
           ts = {
             node: `u(${n.toString()})`,
             children: n.children.map((c) => summary(c)),
           };
           break;
+        }
       }
       return ts;
     };
