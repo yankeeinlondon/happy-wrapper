@@ -25,6 +25,7 @@ specifiers:
   vue: ^3.2.44
 
 dependencies:
+  fp-ts: 2.13.1
   happy-dom: 7.6.7
   native-dash: 1.23.2_c6i55f4zfxzk73yp32iagqsyta
 
@@ -41,7 +42,6 @@ devDependencies:
   eslint-plugin-import: 2.26.0_jnohwm7eexgw7uduhweedcbnpe
   eslint-plugin-promise: 6.1.1_eslint@8.27.0
   eslint-plugin-unicorn: 44.0.2_eslint@8.27.0
-  fp-ts: 2.13.1
   npm-run-all: 4.1.5
   prettier: 2.7.1
   tsup: 6.4.0_typescript@4.8.4
@@ -1527,7 +1527,7 @@ packages:
 
   /fp-ts/2.13.1:
     resolution: {integrity: sha512-0eu5ULPS2c/jsa1lGFneEFFEdTbembJv8e4QKXeVJ3lm/5hyve06dlKZrpxmMwJt6rYen7sxmHHK2CLaXvWuWQ==}
-    dev: true
+    dev: false
 
   /fs-minipass/1.2.7:
     resolution: {integrity: sha512-GWSSJGFy4e9GUeCcbIkED+bgAoFyj7XF1mV8rma3QW4NIqX9Kyx79N/PF61H5udOV3aY1IaMLs6pGbH71nlCTA==}
