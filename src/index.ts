@@ -8,8 +8,14 @@ import {
   INode as HNode,
 } from "happy-dom";
 
+/**
+ * A DOM document originated from Happy DOM and renamed from
+ * `Document` so as to avoid possible conflicts with Typescript's
+ * built in `Document` type.
+ */
+export interface HappyDoc extends HDocument {}
+
 export type Document = HDocument;
-export type HappyDoc = HDocument;
 export type DocumentFragment = HDocumentFragment;
 export type Fragment = HDocumentFragment;
 /** An element in the DOM [happy-dom] */
