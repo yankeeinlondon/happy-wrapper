@@ -1,4 +1,4 @@
-import {
+import type {
   Document as HDocument,
   // use of Fragment offers less conflicts which can come into play with DocumentFragment
   DocumentFragment as HDocumentFragment,
