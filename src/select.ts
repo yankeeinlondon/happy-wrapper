@@ -3,14 +3,13 @@ import { createElement, createFragment } from "./create";
 import { describeNode, inspect } from "./diagnostics";
 import { HappyMishap } from "./errors";
 import type {
-  ContainerOrHtml,
   HTML,
   MapCallback,
   NodeSelector,
   UpdateCallback,
   UpdateCallback_Native,
 } from "./happy-types";
-import { getChildElements, into, wrap } from "./nodes";
+import { getChildElements, wrap } from "./nodes";
 import {
   isDocument,
   isElement,
@@ -258,20 +257,18 @@ export const select = <D extends Document | Fragment | IElement | HTML>(
      * call to `select(dom)` and returns the map results to the caller instead of
      * continuing the selection API surface.
      */
-    mapAll:
-      <S extends string | undefined>(selection?: S) =>
-      <M extends MapCallback<IElement, any>>(mutate: M) => {
-        const collection: ReturnType<M>[] = [];
-        const elements: IElement[] = selection
-          ? rootNode.querySelectorAll(selection)
-          : getChildElements(rootNode);
+    mapAll: (selection) => (mutate) => {
+      const collection = [];
+      const elements: IElement[] = selection
+        ? rootNode.querySelectorAll(selection)
+        : getChildElements(rootNode);
 
-        for (const el of elements) {
-          collection.push(mutate(clone(el)));
-        }
+      for (const el of elements) {
+        collection.push(mutate(clone(el)));
+      }
 
-        return collection;
-      },
+      return collection;
+    },
 
     /**
      * Filters out `IElement` nodes out of the selected DOM tree which match

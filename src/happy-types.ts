@@ -211,7 +211,7 @@ export interface NodeSelector<T extends Container | "html"> {
    */
   mapAll: <S extends string | undefined>(
     selection?: S
-  ) => <O, M extends MapCallback<IElement, O>>(mutate: M) => O[];
+  ) => <O>(mutate: MapCallback<IElement, O>) => O[];
 
   /**
    * Filters out all nodes which match the DOM query selector and returns the

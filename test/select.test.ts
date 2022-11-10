@@ -1,17 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   changeTagName,
-  clone,
   createElement,
   createFragment,
-  IElement,
-  inspect,
   isElement,
   isHappyWrapperError,
   select,
   toHtml,
-  tree,
 } from "../src";
+import { Expect, Equal } from "@type-challenges/utils";
 
 describe("select", () => {
   it("select() utility's updateAll functionality", () => {
@@ -31,6 +28,29 @@ describe("select", () => {
     for (const t of tags) {
       expect(t).toBe("div");
     }
+  });
+
+  it("select().mapAll(sel)(i => ...) is type strong", () => {
+    const html = `<div class='wrapper'>
+      <span class='line line-1'>1</span>
+      <span class='line line-2'>2</span>
+      <span class='line line-3'>3</span>
+    </div>
+    `;
+    const el = createFragment(html);
+    const selection = select(el).mapAll("span")((_m) => "foo" as const);
+    type S = typeof selection;
+
+    expect(Array.isArray(selection)).toBeTruthy();
+    expect(selection.length).toBe(3);
+    for (const s of selection) {
+      expect(s).toBe("foo");
+    }
+
+    type cases = [
+      Expect<Equal<S, "foo"[]>> //
+    ];
+    const cases: cases = [true];
   });
 
   it("can distinguish based on attribute being present or not", () => {
