@@ -31,6 +31,7 @@
     "dist"
   ],
   "scripts": {
+    "audit:fix": "pnpm audit --fix",
     "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --clean",
     "watch": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --watch",
     "test": "vitest",
@@ -42,10 +43,9 @@
     "lint:test": "eslint test/**/*.ts --fix"
   },
   "dependencies": {
+    "happy-dom": "^7.6.7",
+    "fp-ts": "^2.13.1",
     "native-dash": "^1.23.2"
-  },
-  "peerDependencies": {
-    "happy-dom": "^7.6.0"
   },
   "devDependencies": {
     "@type-challenges/utils": "^0.1.1",
@@ -60,8 +60,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-unicorn": "^44.0.2",
-    "fp-ts": "^2.13.1",
-    "happy-dom": "^7.6.7",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
     "tsup": "^6.4.0",
