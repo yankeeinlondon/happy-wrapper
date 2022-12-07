@@ -44,12 +44,13 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "happy-dom": "^7.6.7",
+    "dashify": "^2.0.0",
     "fp-ts": "^2.13.1",
-    "native-dash": "^1.23.2"
+    "happy-dom": "^7.6.7"
   },
   "devDependencies": {
     "@type-challenges/utils": "^0.1.1",
+    "@types/dashify": "^1.0.1",
     "@types/node": "^16.18.3",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",

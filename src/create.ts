@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/consistent-function-scoping */
 import { identity } from "fp-ts/lib/function.js";
 import { Comment, Text, Window } from "happy-dom";
-import { dasherize } from "native-dash";
+import dashify from 'dashify'
 import { HappyMishap } from "./errors";
 import type { Container, HTML } from "./happy-types";
 import type { HappyDoc, Fragment, IComment, IElement, IText } from "./index";
@@ -198,7 +198,7 @@ const renderClasses = (klasses: MultiClassDefn) => {
     .map(
       ([selector, defn]) =>
         `\n\n  ${selector} {\n${Object.keys(defn)
-          .map((p) => `    ${dasherize(p)}: ${defn[p]};`)
+          .map((p) => `    ${dashify(p)}: ${defn[p]};`)
           .join("\n")}\n  }`
     )
     .join("\n");
