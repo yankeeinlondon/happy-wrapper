@@ -1,6 +1,6 @@
 {
   "name": "@yankeeinlondon/happy-wrapper",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "A functional API surface wrapping happy-dom",
   "keywords": [
     "dom",
