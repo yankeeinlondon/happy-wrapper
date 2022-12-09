@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import { flow, pipe } from "fp-ts/lib/function.js";
 import { getClassList } from "./attributes";
 import { createFragment } from "./create";
@@ -193,7 +194,7 @@ export const inspect = <T extends boolean>(
                 return "N/A";
               }
             }),
-            html: toHtml(x),
+            html: truncate(512)(toHtml(x)),
           }),
           node: (n) => ({
             kind: "INode (generic)",
@@ -203,8 +204,8 @@ export const inspect = <T extends boolean>(
               ? "text"
               : "unknown",
             children: `${n.childNodes?.length}`,
-            childContent: n.childNodes?.map((i) => i.textContent),
-            html: n.toString(),
+            childContent: n.childNodes?.map((i) => truncate(128)(i.textContent)),
+            html: truncate(512)(n.toString()),
           }),
         });
   const result =
