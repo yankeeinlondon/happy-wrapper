@@ -120,5 +120,6 @@ export class HappyMishap extends Error {
         ? this.message
         : `${this.message}\n  - ${l.fn ? `${l.fn}() ` : ""}${l.file}:${l.line}`;
     }
+    this.structuredStack = [];
   }
 }
