@@ -42,7 +42,7 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "native-dash": "^1.23.2"
+    "native-dash": "^1.24.0"
   },
   "peerDependencies": {
     "fp-ts": "^2.13.1",
