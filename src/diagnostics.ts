@@ -94,7 +94,10 @@ export const inspect = <T extends boolean>(
               : {
                   childNode: inspect(x.firstChild),
                 }),
-            content: x.textContent,
+            content:
+              x.textContent.length > 128
+                ? `${x.textContent.slice(0, 128)} ...`
+                : x.textContent,
             childDetails: x.childNodes.map((i) => {
               try {
                 return {
@@ -141,13 +144,19 @@ export const inspect = <T extends boolean>(
           }),
           text: (x) => ({
             kind: "IText node",
-            textContent: x.textContent,
+            textContent:
+              x.textContent.length > 128
+                ? `${x.textContent.slice(0, 128)} ...`
+                : x.textContent,
             children: x.childNodes?.length,
             childContent: x.childNodes?.map((i) => i.textContent),
           }),
           comment: (c) => ({
             kind: "IComment node",
-            textContent: c.textContent,
+            textContent:
+              c.textContent.length > 128
+                ? `${c.textContent.slice(0, 128)} ...`
+                : c.textContent,
             children: c.childNodes?.length,
             childContent: c.childNodes?.map((i) => i.textContent),
           }),
