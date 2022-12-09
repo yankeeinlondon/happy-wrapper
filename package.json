@@ -20,11 +20,9 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
       "import": "./dist/index.js"
     }
   },
-  "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -32,8 +30,8 @@
   ],
   "scripts": {
     "audit:fix": "pnpm audit --fix",
-    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --clean",
-    "watch": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --watch",
+    "build": "tsup src/index.ts --format esm --dts --sourcemap external --clean",
+    "watch": "tsup src/index.ts --format esm --dts --sourcemap external --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "prepublishOnly": "npm run build",
@@ -44,29 +42,32 @@
     "lint:tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "happy-dom": "^7.6.7",
-    "fp-ts": "^2.13.1",
     "native-dash": "^1.23.2"
+  },
+  "peerDependencies": {
+    "fp-ts": "^2.13.1",
+    "happy-dom": "^8.1.0"
   },
   "devDependencies": {
     "@type-challenges/utils": "^0.1.1",
-    "@types/node": "^16.18.3",
-    "@typescript-eslint/eslint-plugin": "^5.42.1",
-    "@typescript-eslint/parser": "^5.42.1",
-    "@vitest/ui": "^0.25.1",
+    "@types/node": "^16.18.7",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "@vitest/ui": "^0.25.6",
     "bumpp": "^8.2.1",
     "callsites": "^4.0.0",
-    "changelogithub": "^0.12.4",
-    "eslint": "^8.27.0",
+    "eslint": "^8.29.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-unicorn": "^44.0.2",
+    "eslint-plugin-unicorn": "^45.0.1",
+    "fp-ts": "^2.13.1",
+    "happy-dom": "^8.1.0",
     "npm-run-all": "^4.1.5",
-    "prettier": "^2.7.1",
-    "tsup": "^6.4.0",
-    "typescript": "^4.8.4",
-    "vite": "^3.2.3",
-    "vitest": "^0.25.1",
-    "vue": "^3.2.44"
+    "prettier": "^2.8.1",
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.4",
+    "vite": "^3.2.5",
+    "vitest": "^0.25.6",
+    "vue": "^3.2.45"
   }
 }

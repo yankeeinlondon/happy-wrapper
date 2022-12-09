@@ -248,9 +248,9 @@ export const into =
       ? createFragment(parent)
       : isElement(parent)
       ? parent
-      : !parent
-      ? createFragment()
-      : parent;
+      : parent
+      ? parent
+      : createFragment();
 
     // flatten children passed in to support both arrays and destructed arrays
     const flat = isUpdateSignature(content)

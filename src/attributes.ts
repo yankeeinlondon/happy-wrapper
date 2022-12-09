@@ -131,7 +131,7 @@ export const removeClass =
   <R extends string | string[]>(remove: R): RemoveClass<R> =>
   <D extends DocRoot | IElement | HTML>(doc: D): D => {
     const current = getClass(doc)?.split(/\s+/g) || [];
-    const toRemove: string[] = !Array.isArray(remove) ? [remove] : remove;
+    const toRemove: string[] = Array.isArray(remove) ? remove : [remove];
 
     const resultantClassString = [
       ...new Set<string>(current.filter((c) => !toRemove.includes(c))),

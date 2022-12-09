@@ -121,7 +121,7 @@ export function toHtml<D extends ContainerOrHtml | ContainerOrHtml[] | null>(
     return "";
   }
 
-  const n = (!Array.isArray(node) ? [node] : node) as ContainerOrHtml[];
+  const n = (Array.isArray(node) ? node : [node]) as ContainerOrHtml[];
   try {
     const results = n.map((i) => {
       const convert = solveForNodeType()

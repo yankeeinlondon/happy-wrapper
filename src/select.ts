@@ -81,9 +81,9 @@ export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
         return api;
       }
 
-      const nodes = !Array.isArray(content)
-        ? [content]
-        : (content.filter(Boolean) as (INode | HTML)[]);
+      const nodes = Array.isArray(content)
+        ? (content.filter(Boolean) as (INode | HTML)[])
+        : [content];
       rootNode.append(...nodes);
 
       return api;
