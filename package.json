@@ -20,9 +20,11 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -30,8 +32,8 @@
   ],
   "scripts": {
     "audit:fix": "pnpm audit --fix",
-    "build": "tsup src/index.ts --format esm --dts --sourcemap external --clean",
-    "watch": "tsup src/index.ts --format esm --dts --sourcemap external --watch",
+    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --clean",
+    "watch": "tsup src/index.ts --format cjs,esm --dts --sourcemap external --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "prepublishOnly": "npm run build",
