@@ -2,6 +2,8 @@
 
 A wrapper around the popular [happy-dom](https://github.com/capricorn86/happy-dom) API which provides a more _functional_ interaction model.
 
+Note: version 3.x bumps the version of happy-dom up to the 12.x.y versions.
+
 ## Examples
 
 ### Attributes
