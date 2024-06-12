@@ -14,6 +14,9 @@ importers:
       happy-dom:
         specifier: ^14.12.0
         version: 14.12.0
+      happy-dom-without-node:
+        specifier: ^14.12.0
+        version: 14.12.0
       inferred-types:
         specifier: ^0.45.0
         version: 0.45.0
@@ -60,6 +63,9 @@ importers:
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5
+      pathe:
+        specifier: ^1.1.2
+        version: 1.1.2
       prettier:
         specifier: ^3.3.2
         version: 3.3.2
@@ -1426,6 +1432,10 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
+  happy-dom-without-node@14.12.0:
+    resolution: {integrity: sha512-Zyfl1SLa7qlq1wHcYVeBpWzLWGQVZ7FFbGAFeBAQyeSzKTi/NFiEx63Ui5dlacZjxuRS1ohYfWfbLsasCppVsQ==}
+    engines: {node: '>=16.0.0'}
+
   happy-dom@14.12.0:
     resolution: {integrity: sha512-dHcnlGFY2o2CdxfuYpqwSrBrpj/Kuzv4u4f3TU5yHW1GL24dKij4pv1BRjXnXc3uWo8qsCbToF9weaDsm/He8A==}
     engines: {node: '>=16.0.0'}
@@ -2318,6 +2328,10 @@ packages:
   tr46@1.0.1:
     resolution: {integrity: sha512-dTpowEjclQ7Kgx5SdBkqRzVhERQXov8/l9Ft9dVM9fmg0W0KQSVaXX9T4i6twCPNtYiZM53lpSSUAwJbFPOHxA==}
 
+  tr46@5.0.0:
+    resolution: {integrity: sha512-tk2G5R2KRwBd+ZN0zaEXpmzdKyOYksXwywulIX95MBODjSzMIuQnQ3m8JxgbhnL1LeVo7lqQKsYa1O3Htl7K5g==}
+    engines: {node: '>=18'}
+
   tree-kill@1.2.2:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
@@ -2547,6 +2561,10 @@ packages:
   whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
     engines: {node: '>=12'}
+
+  whatwg-url@14.0.0:
+    resolution: {integrity: sha512-1lfMEm2IEr7RIV+f4lUNPOqfFL+pO+Xw3fJSqmjX9AbXcXcYOkCe1P6+9VBZB6n94af16NfZf+sSk0JCBZC9aw==}
+    engines: {node: '>=18'}
 
   whatwg-url@7.1.0:
     resolution: {integrity: sha512-WUu7Rg1DroM7oQvGWfOiAK21n74Gg+T4elXEQYkOhtyLeWiJFoOGLXPKI/9gzIie9CtwVLm8wtw6YJdKyxSjeg==}
@@ -4027,6 +4045,13 @@ snapshots:
 
   graphemer@1.4.0: {}
 
+  happy-dom-without-node@14.12.0:
+    dependencies:
+      entities: 4.5.0
+      webidl-conversions: 7.0.0
+      whatwg-mimetype: 3.0.0
+      whatwg-url: 14.0.0
+
   happy-dom@14.12.0:
     dependencies:
       entities: 4.5.0
@@ -4887,6 +4912,10 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
+  tr46@5.0.0:
+    dependencies:
+      punycode: 2.3.1
+
   tree-kill@1.2.2: {}
 
   ts-api-utils@1.3.0(typescript@5.4.5):
@@ -5119,6 +5148,11 @@ snapshots:
   webidl-conversions@7.0.0: {}
 
   whatwg-mimetype@3.0.0: {}
+
+  whatwg-url@14.0.0:
+    dependencies:
+      tr46: 5.0.0
+      webidl-conversions: 7.0.0
 
   whatwg-url@7.1.0:
     dependencies:
