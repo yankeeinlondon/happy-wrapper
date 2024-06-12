@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-logical-operator-over-ternary */
 import { pipe } from "fp-ts/lib/function.js";
 import { HappyMishap } from "./errors";
 import {
@@ -26,7 +25,7 @@ import {
 import { clone, getNodeType, solveForNodeType, toHtml } from "./utils";
 import {
   addClass,
-  Fragment,
+  IFragment,
   getClassList,
   HappyDoc,
   IElement,
@@ -208,7 +207,7 @@ export type IntoChildren<P extends DocRoot | IElement | HTML | undefined> = <
 ) => A extends UpdateSignature
   ? IElement | false
   : undefined extends P
-  ? Fragment
+  ? IFragment
   : P;
 
 /**
@@ -231,7 +230,7 @@ export const into =
   ): C extends UpdateSignature
     ? IElement | false
     : undefined extends P
-    ? Fragment
+    ? IFragment
     : P => {
     /**
      * Keeps track of whether the incoming parent was wrapped in a temporary
@@ -275,7 +274,6 @@ export const into =
 
     if (parentHasChildElements) {
       for (const c of getChildren(transient)) {
-        // eslint-disable-next-line unicorn/prefer-dom-node-append
         normalizedParent.firstChild.appendChild(clone(c));
       }
     } else {
@@ -289,7 +287,7 @@ export const into =
     // and make sure that the element passed in is replaced with the parent
     if (isUpdateSignature(content) && isElement(content[0])) {
       normalizedParent = isElementLike(normalizedParent)
-        ? normalizedParent.firstElementChild
+        ? normalizedParent.firstElementChild as IElement
         : createElement(normalizedParent);
 
       content[0].replaceWith(normalizedParent);
@@ -302,13 +300,13 @@ export const into =
     ) as C extends UpdateSignature
       ? IElement | false
       : undefined extends P
-      ? Fragment
+      ? IFragment
       : P;
   };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export type ChangeTagNameTo<T extends string> = <
-  E extends [IElement | HTML | HappyDoc | Fragment] | UpdateSignature
+  E extends [IElement | HTML | HappyDoc | IFragment] | UpdateSignature
 >(
   ...el: E
 ) => E extends UpdateSignature ? IElement : E;
@@ -323,14 +321,14 @@ export type ChangeTagNameTo<T extends string> = <
  */
 export const changeTagName =
   <T extends string>(tagName: T): ChangeTagNameTo<T> =>
-  <A extends [IElement | HTML | HappyDoc | Fragment] | UpdateSignature>(
+  <A extends [IElement | HTML | HappyDoc | IFragment] | UpdateSignature>(
     ...args: A
   ): A extends UpdateSignature ? IElement : A => {
     const node = args[0];
     /** uses regex to modify tag name to new value */
     const replacer = (el: IElement, tagName: string) => {
       const open = new RegExp(`^<${el.tagName.toLowerCase()}`);
-      const close = new RegExp(`<\/${el.tagName.toLowerCase()}>$`);
+      const close = new RegExp(`</${el.tagName.toLowerCase()}>$`);
 
       const newTag = toHtml(el)
         .replace(open, `<${tagName}`)
@@ -342,7 +340,6 @@ export const changeTagName =
       return newTag;
     };
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     const areTheSame = (before: string, after: string) =>
       before.toLocaleLowerCase() === after.toLocaleLowerCase();
 
@@ -353,7 +350,7 @@ export const changeTagName =
           const before = createFragment(h).firstElementChild.tagName;
           return areTheSame(before, tagName)
             ? h
-            : toHtml(replacer(createFragment(h).firstElementChild, tagName));
+            : toHtml(replacer(createFragment(h).firstElementChild as IElement, tagName));
         },
         text: (t) => {
           throw new HappyMishap(
@@ -382,7 +379,7 @@ export const changeTagName =
           if (f.firstElementChild) {
             if (f.firstElementChild.parentElement) {
               f.firstElementChild.replaceWith(
-                changeTagName(tagName)(f.firstElementChild)
+                changeTagName(tagName)(f.firstElementChild as IElement)
               );
             } else {
               throw new HappyMishap(
@@ -401,7 +398,7 @@ export const changeTagName =
         },
         document: (d) => {
           d.body.firstElementChild.replaceWith(
-            changeTagName(tagName)(d.body.firstElementChild)
+            changeTagName(tagName)(d.body.firstElementChild as IElement)
           );
           const body = toHtml(d.body);
           const head = d.head.innerHTML;
@@ -432,9 +429,9 @@ export const prepend =
     return el;
   };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+ 
 export type Before<_T extends ContainerOrHtml> = <
-  A extends [IElement | HTML | HappyDoc | Fragment] | UpdateSignature
+  A extends [IElement | HTML | HappyDoc | IFragment] | UpdateSignature
 >(
   ...afterNode: A
 ) => A extends UpdateSignature ? IElement : A extends string ? string : A;
@@ -451,7 +448,7 @@ export type Before<_T extends ContainerOrHtml> = <
  */
 export const before =
   <B extends ContainerOrHtml>(beforeNode: B): Before<B> =>
-  <A extends [IElement | HTML | HappyDoc | Fragment] | UpdateSignature>(
+  <A extends [IElement | HTML | HappyDoc | IFragment] | UpdateSignature>(
     ...afterNode: A
   ): A extends UpdateSignature ? IElement : A extends string ? string : A => {
     const outputIsHtml = typeof afterNode[0] === "string";
@@ -534,7 +531,7 @@ export const before =
 
 export const after =
   (afterNode: IElement | IText | HTML) =>
-  <B extends IElement | Fragment | HTML>(beforeNode: B): B => {
+  <B extends IElement | IFragment | HTML>(beforeNode: B): B => {
     const afterNormalized =
       typeof afterNode === "string"
         ? createFragment(afterNode).firstElementChild
@@ -588,7 +585,7 @@ export type ReadyForWrapper<_C extends UpdateSignature | ContainerOrHtml[]> = <
   P extends DocRoot | IElement | HTML | undefined
 >(
   parent: P
-) => undefined extends P ? Fragment : P;
+) => undefined extends P ? IFragment : P;
 
 /**
  * **wrap**
@@ -608,5 +605,5 @@ export const wrap =
     ...children: C
   ): ReadyForWrapper<C> =>
   <P extends DocRoot | IElement | HTML | undefined>(parent?: P) => {
-    return into(parent)(...children) as undefined extends P ? Fragment : P;
+    return into(parent)(...children) as undefined extends P ? IFragment : P;
   };

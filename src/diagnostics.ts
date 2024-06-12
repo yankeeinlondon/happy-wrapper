@@ -21,15 +21,16 @@ import {
   isUpdateSignature,
 } from "./type-guards";
 import { getNodeType, solveForNodeType, toHtml } from "./utils";
-import type { HappyDoc, Fragment, IElement, INode } from "./index";
+import { Dictionary } from "inferred-types";
+import type { HappyDoc, IFragment, IElement, INode } from "./index";
 
 function descClass(n: Container) {
   const list = getClassList(n);
   return list.length > 0 ? `{ ${list.join(" ")} }` : "";
 }
 
-function descFrag(n: Fragment) {
-  // eslint-disable-next-line no-use-before-define
+function descFrag(n: IFragment) {
+   
   const children = getChildren(n).map((i) => describeNode(i));
   return isElementLike(n)
     ? `[el: ${n.firstElementChild.tagName.toLowerCase()}]${descClass}`
@@ -150,7 +151,7 @@ export const inspect = <T extends boolean>(
                 ? `${x.textContent.slice(0, 128)} ...`
                 : x.textContent,
             children: x.childNodes?.length,
-            childContent: x.childNodes?.map((i) => i.textContent),
+            childContent: x?.childNodes?.map((i: any) => i.textContent) || [],
           }),
           comment: (c) => ({
             kind: "IComment node",
@@ -159,7 +160,7 @@ export const inspect = <T extends boolean>(
                 ? `${c.textContent.slice(0, 128)} ...`
                 : c.textContent,
             children: c.childNodes?.length,
-            childContent: c.childNodes?.map((i) => i.textContent),
+            childContent: c?.childNodes?.map((i: any) => i.textContent) || [],
           }),
           element: (x) => ({
             kind: "IElement node",
@@ -176,8 +177,8 @@ export const inspect = <T extends boolean>(
               : {}),
             textContent: x.textContent,
             children: `${x.children.length} / ${x.childNodes.length}`,
-            childContent: x.childNodes?.map((i) => i.textContent),
-            childDetails: x.childNodes.map((i) => {
+            childContent: x.childNodes?.map((i: any) => i.textContent) || [],
+            childDetails: x?.childNodes?.map((i: any) => {
               try {
                 return {
                   html: toHtml(i),
@@ -193,7 +194,7 @@ export const inspect = <T extends boolean>(
               } catch {
                 return "N/A";
               }
-            }),
+            }) || [],
             html: truncate(512)(toHtml(x)),
           }),
           node: (n) => ({
@@ -204,7 +205,7 @@ export const inspect = <T extends boolean>(
               ? "text"
               : "unknown",
             children: `${n.childNodes?.length}`,
-            childContent: n.childNodes?.map((i) => truncate(128)(i.textContent)),
+            childContent: n?.childNodes?.map((i: any) => truncate(128)(i.textContent)) || [],
             html: truncate(512)(n.toString()),
           }),
         });
@@ -215,7 +216,7 @@ export const inspect = <T extends boolean>(
           result: "not found",
           type: typeof item,
           ...(typeof item === "object" && item !== null
-            ? { keys: Object.keys(item as Object) }
+            ? { keys: Object.keys(item as Dictionary) }
             : { value: JSON.stringify(item) }),
         };
   return (toJSON ? JSON.stringify(result, null, 2) : result) as false extends T
@@ -275,7 +276,7 @@ export const tree = (node: Container | HTML): Tree => {
           break;
         }
         case "fragment": {
-          const f = n.node as Fragment;
+          const f = n.node as IFragment;
           ts = {
             node: `frag(${
               f.firstElementChild
@@ -343,28 +344,28 @@ export const tree = (node: Container | HTML): Tree => {
             type: "text",
             node: t,
             level,
-            children: t.childNodes.map((c) => convert(level + 1)(c)),
+            children: t.childNodes.map((c: any) => convert(level + 1)(c)),
           }),
         comment: (c) =>
           summarize({
             type: "comment",
             node: c,
             level,
-            children: c.childNodes.map((i) => convert(level + 1)(i)),
+            children:  [],
           }),
         element: (e) =>
           summarize({
             type: "element",
             node: e,
             level,
-            children: e.childNodes.map((c) => convert(level + 1)(c)),
+            children: [],
           }),
         node: (n) =>
           summarize({
             type: "node",
             node: n,
             level,
-            children: n.childNodes.map((c) => convert(level + 1)(c)),
+            children: [],
           }),
         fragment: (f) =>
           summarize({

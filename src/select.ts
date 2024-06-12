@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-logical-operator-over-ternary */
 import { createElement, createFragment } from "./create";
 import { describeNode, inspect } from "./diagnostics";
 import { HappyMishap } from "./errors";
@@ -17,18 +16,18 @@ import {
   isHappyWrapperError,
 } from "./type-guards";
 import { clone, getNodeType, toHtml } from "./utils";
-import type { HappyDoc, Fragment, IElement, INode, IText } from "./index";
+import type { HappyDoc, IFragment, IElement, INode, IText } from "./index";
 
 /**
  * Allows the _selection_ of HTML or a container type which is
  * then wrapped and a helpful query and mutation API is provided
  * to work with this DOM element.
  */
-export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
+export const select = <D extends HappyDoc | IFragment | IElement | HTML>(
   node: D
 ) => {
   const originIsHtml = typeof node === "string";
-  let rootNode: HappyDoc | Fragment | IElement = originIsHtml
+  let rootNode: HappyDoc | IFragment | IElement = originIsHtml
     ? createFragment(node)
     : isElement(node)
     ? (node as IElement)
@@ -43,7 +42,7 @@ export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
     );
   }
 
-  type T = undefined extends D ? Fragment : D extends string ? "html" : D;
+  type T = undefined extends D ? IFragment : D extends string ? "html" : D;
   const api: NodeSelector<T> = {
     type: () => {
       return originIsHtml ? "html" : getNodeType(rootNode);
@@ -51,7 +50,7 @@ export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
 
     findAll: <S extends string | undefined>(sel: S) => {
       return sel
-        ? (rootNode.querySelectorAll(sel) as IElement[])
+        ? (rootNode.querySelectorAll(sel) as unknown as IElement[])
         : getChildElements(rootNode);
     },
 
@@ -117,7 +116,7 @@ export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
           let elReplacement: IElement | false;
           try {
             elReplacement = (mutate as unknown as UpdateCallback_Native)(
-              el,
+              el as IElement,
               0,
               1
             );
@@ -160,7 +159,7 @@ export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
 
           if (!selection) {
             throw new HappyMishap(
-              `Call to select(container).update() was intended to target the root node of the selection but nothing was selected! This shouldn\'t really happen ... the rootNode\'s type is ${typeof rootNode}${
+              `Call to select(container).update() was intended to target the root node of the selection but nothing was selected! This shouldn't really happen ... the rootNode's type is ${typeof rootNode}${
                 typeof rootNode === "object"
                   ? `, 
             ${getNodeType(rootNode)} [element-like: ${isElementLike(
@@ -258,9 +257,11 @@ export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
      */
     mapAll: (selection) => (mutate) => {
       const collection = [];
-      const elements: IElement[] = selection
+      const elements: IElement[] = (
+        selection
         ? rootNode.querySelectorAll(selection)
-        : getChildElements(rootNode);
+        : getChildElements(rootNode)
+      ) as unknown as IElement[];
 
       for (const el of elements) {
         collection.push(mutate(clone(el)));
@@ -278,9 +279,9 @@ export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
       selection: S,
       cb?: (removed: IElement) => void
     ) => {
-      for (const el of rootNode?.querySelectorAll(selection)) {
+      for (const el of rootNode?.querySelectorAll(selection) || []) {
         if (cb) {
-          cb(el);
+          cb(el as IElement);
         }
         el.remove();
       }
@@ -309,7 +310,7 @@ export const select = <D extends HappyDoc | Fragment | IElement | HTML>(
 
     toContainer: () => {
       return (originIsHtml ? toHtml(rootNode) : rootNode) as undefined extends T
-        ? Fragment
+        ? IFragment
         : T extends "html"
         ? string
         : T;

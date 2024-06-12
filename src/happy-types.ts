@@ -2,7 +2,7 @@
 import type { getNodeType } from "./utils";
 import type {
   HappyDoc,
-  Fragment,
+  IFragment,
   IComment,
   IElement,
   INode,
@@ -51,10 +51,10 @@ export type NodeSolverInput<T extends NodeType> = T extends "html"
   : T extends "document"
   ? HappyDoc
   : T extends "fragment"
-  ? Fragment
+  ? IFragment
   : unknown;
 
-export type DocRoot = HappyDoc | Fragment;
+export type DocRoot = HappyDoc | IFragment;
 export type DomNode = IElement | IText | IComment | INode;
 export type Container = DocRoot | DomNode;
 export type ContainerOrHtml = Container | HTML;
@@ -119,7 +119,7 @@ export interface NodeSolverDict<O> {
   comment: (input: IComment) => O extends "mirror" ? IComment : O;
   node: (input: INode) => O extends "mirror" ? INode : O;
   document: (input: HappyDoc) => O extends "mirror" ? HappyDoc : O;
-  fragment: (input: Fragment) => O extends "mirror" ? Fragment : O;
+  fragment: (input: IFragment) => O extends "mirror" ? IFragment : O;
 }
 
 /**
@@ -234,7 +234,7 @@ export interface NodeSelector<T extends Container | "html"> {
    * Returns the root node with all mutations included
    */
   toContainer: () => undefined extends T
-    ? Fragment
+    ? IFragment
     : T extends "html"
     ? string
     : T;

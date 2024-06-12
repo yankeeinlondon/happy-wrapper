@@ -1,10 +1,9 @@
-/* eslint-disable unicorn/consistent-function-scoping */
 import { identity } from "fp-ts/lib/function.js";
 import { Comment, Text, Window } from "happy-dom";
 import { dasherize } from "native-dash";
 import { HappyMishap } from "./errors";
 import type { Container, HTML } from "./happy-types";
-import type { HappyDoc, Fragment, IComment, IElement, IText } from "./index";
+import type { HappyDoc, IFragment, IComment, IElement, IText } from "./index";
 import { isElement, isElementLike, isTextNodeLike } from "./type-guards";
 import { clone, solveForNodeType, toHtml } from "./utils";
 
@@ -21,20 +20,20 @@ export function createDocument(body: string, head?: string): HappyDoc {
   return document as HappyDoc;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type FragmentFrom<_T extends Container | "html"> = Fragment;
+ 
+export type FragmentFrom<_T extends Container | "html"> = IFragment;
 
 export function createFragment<C extends Container | HTML>(
   content?: C
-): FragmentFrom<C extends string ? "html" : Fragment> {
+): FragmentFrom<C extends string ? "html" : IFragment> {
   const window = new Window();
   const document = window.document as HappyDoc;
-  const fragment = document.createDocumentFragment() as Fragment;
+  const fragment = document.createDocumentFragment() as IFragment;
   if (content) {
-    fragment.append(clone(content));
+    fragment.append(clone(content) );
   }
 
-  return fragment as FragmentFrom<C extends string ? "html" : Fragment>;
+  return fragment as FragmentFrom<C extends string ? "html" : IFragment>;
 }
 
 /**
@@ -103,10 +102,10 @@ export const createElement = (
         if (isElementLike(frag)) {
           if (parent) {
             parent.append(frag.firstElementChild);
-            return parent?.lastElementChild;
+            return parent?.lastElementChild as IElement;
           }
 
-          return frag.firstElementChild;
+          return frag.firstElementChild as IElement;
         } else {
           throw new HappyMishap(
             "The HTML passed into createElement() is not convertible to a IElement node!",
@@ -145,7 +144,7 @@ export const createElement = (
             );
           }
 
-          return d.firstElementChild;
+          return d.firstElementChild as IElement;
         } else {
           throw new HappyMishap(
             "Can not create an Element from passed in Document",

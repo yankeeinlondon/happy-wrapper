@@ -1,8 +1,6 @@
-/* eslint-disable unicorn/consistent-function-scoping */
 import { pipe } from "fp-ts/lib/function.js";
-import type { IElement } from "./index";
+import type { IElement, INode } from "./index";
 import type { Events } from "vue";
-import type { INode } from "happy-dom";
 import type {
   Container,
   ContainerOrHtml,
@@ -15,12 +13,11 @@ import { HappyMishap } from "./errors";
 import { isDocument, isElement, isFragment } from "./type-guards";
 import { getNodeType, solveForNodeType, toHtml } from "./utils";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type SetAttribute<T extends string> = (
+export type SetAttribute = (
   value: string
 ) => <N extends Container | HTML>(node: N) => N;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 export type SetAttributeTo<_T extends string, _V extends string> = <
   N extends Container | HTML
 >(
@@ -28,7 +25,7 @@ export type SetAttributeTo<_T extends string, _V extends string> = <
 ) => N;
 
 export const setAttribute =
-  <T extends string>(attr: T): SetAttribute<T> =>
+  <T extends string>(attr: T): SetAttribute =>
   <V extends string>(value: V): SetAttributeTo<T, V> =>
   <N extends Container | HTML>(node: N): N => {
     const invalidNode = (n: INode) => {
@@ -142,8 +139,8 @@ export const removeClass =
     return setClass(resultantClassString)(doc);
   };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export type AddClass<A extends string[] | string[][]> = <
+ 
+export type AddClass = <
   C extends DocRoot | IElement | HTML
 >(
   container: C
@@ -153,7 +150,7 @@ export type AddClass<A extends string[] | string[][]> = <
  * Adds a class to the top level node of a document's body.
  */
 export const addClass =
-  <A extends string[] | string[][]>(...add: A): AddClass<A> =>
+  <A extends string[] | string[][]>(...add: A): AddClass =>
   <D extends DocRoot | IElement | HTML>(doc: D): D => {
     const toAdd = (Array.isArray(add) ? add.flat() : [add]) as string[];
 

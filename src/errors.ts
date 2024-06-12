@@ -11,7 +11,7 @@ export interface StackLine {
 
 export class HappyMishap extends Error {
   public name = "HappyWrapper";
-  public readonly kind: "HappyWrapper" = "HappyWrapper";
+  public readonly kind: "HappyWrapper" = "HappyWrapper" as const;
   public trace: string[] = [];
   public readonly line: number | null;
   public readonly fn: string;

@@ -7,7 +7,7 @@ import type {
   UpdateSignature,
 } from "./happy-types";
 import type { HappyMishap } from "./errors";
-import type { Fragment, HappyDoc, IElement, IText } from "./index";
+import type { IFragment, HappyDoc, IElement, IText, INode } from "./index";
 
 export function isHappyWrapperError(err: unknown): err is HappyMishap {
   return typeof err === "object" && (err as any).kind === "HappyWrapper";
@@ -27,7 +27,7 @@ export function isDocument(dom: unknown): dom is HappyDoc {
     typeof dom === "object" && dom !== null && !isElement(dom) && "body" in dom
   );
 }
-export function isFragment(dom: unknown): dom is Fragment {
+export function isFragment(dom: unknown): dom is IFragment {
   return (
     typeof dom === "object" &&
     dom !== null &&
@@ -39,10 +39,10 @@ export function isFragment(dom: unknown): dom is Fragment {
 
 export const nodeStartsWithElement = <D extends DocRoot>(node: D) => {
   return !!(
-    "firstElementChild" &&
-    "firstChild" &&
-    "firstElementChild" &&
-    (node as any).firstChild === (node as any).firstElementChild
+    "firstElementChild" in node &&
+    "firstChild" in node &&
+    "firstElementChild" in node &&
+    (node as INode).firstChild === (node as DocRoot).firstElementChild
   );
 };
 export const nodeEndsWithElement = <D extends DocRoot>(node: D) => {
@@ -65,8 +65,8 @@ export function isElement(el: unknown): el is IElement {
   return (
     typeof el === "object" &&
     el !== null &&
-    "outerHTML" in (el as Object) &&
-    (el as any).nodeType === 1
+    "outerHTML" in (el as object) &&
+    (el as IElement).nodeType === 1
   );
 }
 
