@@ -6,7 +6,7 @@ import type {
   Text,
   Comment as HComment,
   Node
-} from "happy-dom";
+} from "happy-dom-without-node";
 
 /**
  * A DOM document originated from Happy DOM and renamed from
