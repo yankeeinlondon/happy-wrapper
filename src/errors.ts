@@ -1,4 +1,3 @@
-import { relative } from "node:path";
 import callsites from "callsites";
 import { inspect } from "./diagnostics";
 import { isHappyWrapperError, isInspectionTuple } from "./type-guards";
@@ -53,13 +52,10 @@ export class HappyMishap extends Error {
             fn:
               i.getFunctionName() ||
               i.getMethodName() ||
-              i.getFunction()?.name ||
-              "",
+              i.getFunction()?.name || undefined,
             line: i.getLineNumber() || undefined,
-            file: i.getFileName()
-              ? relative(process.cwd(), i.getFileName() as string)
-              : "",
-          };
+            file: i.getFileName() ? i.getFileName() : null,
+          } as StackLine;
         }) || [];
     } catch {
       this.structuredStack = [];
