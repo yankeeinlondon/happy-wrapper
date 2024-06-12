@@ -1,5 +1,5 @@
 import { identity } from "fp-ts/lib/function.js";
-import { Comment, Text, Window } from "happy-dom";
+import { Comment, Text, Window } from "happy-dom-without-node";
 import { dasherize } from "native-dash";
 import { HappyMishap } from "./errors";
 import type { Container, HTML } from "./happy-types";
