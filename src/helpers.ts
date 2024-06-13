@@ -1,4 +1,5 @@
-import { IElement, createElement, isElement, isHtmlElement, isNodeList } from ".";
+import { isString } from "inferred-types";
+import { IElement, createElement, createFragment, isElement, isHtmlElement, isNodeList } from ".";
 
 
 /**
@@ -8,15 +9,23 @@ import { IElement, createElement, isElement, isHtmlElement, isNodeList } from ".
  * a `DomError` will be thrown and the `element` property will have the element
  * this traversal from, the `selector` property will have the selector.
  */
-export const traverseUpward = (el: HTMLElement | string, sel: string): HTMLElement => {
-  if (typeof el === "string") {
-    return traverseUpward(createElement(el), sel);
+export const traverseUpward =  <T extends IElement | HTMLElement | string>(node: T, sel: string): IElement => {
+  let el: IElement | undefined = isElement(node)
+    ? node
+    : isString(node)
+    ? createElement(node)
+    : undefined;
+  
+  if(!el) {
+    throw new Error (`Unexpected node passed into traverseUpward: ${typeof node}`);
   }
+
+
 	while(el.parentElement && !el.parentElement.matches(sel)) {
-		el = el.parentElement as HTMLElement;
+		el = el.parentElement as unknown as IElement;
 	}
 	if(el?.parentElement?.matches(sel)) {
-		return el.parentElement as HTMLElement;
+		return el.parentElement as IElement;
 	} else {
 		const err = new Error(`Failed to find parent node of selector "${sel}" using traverseUpward() utility!`) as Error & { 
       element: HTMLElement,
