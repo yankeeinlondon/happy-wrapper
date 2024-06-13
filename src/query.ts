@@ -61,23 +61,23 @@ export const query = <
   T extends string | HappyDoc | Document | IFragment | IElement | HTMLElement,
   H extends HandlingApproach = "empty"
 >(
-  dom: T, 
+  node: T, 
   sel: string,
   handling: H = "empty" as H
 ) => {
   let container: MapContainerType<T>;
-  if (typeof dom === "string") {
-    if (dom.includes("<html>")) {
-      container = createDocument(dom) as MapContainerType<T>;
+  if (typeof node === "string") {
+    if (node.includes("<html>")) {
+      container = createDocument(node) as MapContainerType<T>;
     } else {
-      container = createFragment(dom) as MapContainerType<T>;
+      container = createFragment(node) as MapContainerType<T>;
     }
-  } else if (isDocument(dom)) {
-    container = dom.body as MapContainerType<T>;
-  } else if (isElement(dom)) {
-    container = dom as IElement as MapContainerType<T>;
+  } else if (isDocument(node)) {
+    container = node.body as MapContainerType<T>;
+  } else if (isElement(node)) {
+    container = node as IElement as MapContainerType<T>;
   } else {
-    container = dom as IFragment as MapContainerType<T>
+    container = node as IFragment as MapContainerType<T>
   }
 
 
@@ -85,13 +85,11 @@ export const query = <
 
   if (handling === "throw" && !result) {
     const err = new Error(`Failed to find an HTML element for the selector "${sel}"`) as Error & { 
-      dom: T,
       container: MapContainerTypeName<T>,
       selector: string;
     };
 		err.name = "DomError";
-		// err.dom = dom;
-    err.container = containerName(dom);
+    err.container = containerName(node);
     err.selector = sel;
 		throw err;
   }
@@ -131,7 +129,7 @@ export const queryAll = <
 
   if (handling === "throw" && !result) {
     const err = new Error(`Failed to find an HTML element for the selector "${sel}"`) as Error & { 
-      dom: T,
+      node: T,
       container: MapContainerTypeName<T>,
       selector: string;
     };

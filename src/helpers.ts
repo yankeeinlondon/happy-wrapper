@@ -1,5 +1,43 @@
 import { isString } from "inferred-types";
-import { IElement, createElement,  isElement, isHtmlElement, isNodeList } from ".";
+import { 
+  DomSource, 
+  IElement, 
+  IFragment, 
+  MapContainerType, 
+  createDocument, 
+  createElement,  
+  createFragment,  
+  isDocument,  
+  isElement, 
+  isHtmlElement, 
+  isNodeList 
+} from "./index";
+
+/**
+ * **hasSelector**`(source, sel)`
+ * 
+ * Tests whether a given DOM selector is found in the DOM source passed in.
+ */
+export const hasSelector = <T extends DomSource>(source: T, sel: string): boolean => {
+  let container: MapContainerType<T>;
+  if (typeof source === "string") {
+    if (source.includes("<html>")) {
+      container = createDocument(source) as MapContainerType<T>;
+    } else {
+      container = createFragment(source) as MapContainerType<T>;
+    }
+  } else if (isDocument(source)) {
+    container = source.body as MapContainerType<T>;
+  } else if (isElement(source)) {
+    container = source as IElement as MapContainerType<T>;
+  } else {
+    container = source as IFragment as MapContainerType<T>
+  }
+
+  const result = container.querySelector(sel);
+
+  return result ? true : false;
+} 
 
 
 /**
@@ -9,7 +47,9 @@ import { IElement, createElement,  isElement, isHtmlElement, isNodeList } from "
  * a `DomError` will be thrown and the `element` property will have the element
  * this traversal from, the `selector` property will have the selector.
  */
-export const traverseUpward =  <T extends IElement | HTMLElement | string>(node: T, sel: string): IElement => {
+export const traverseUpward =  <
+  T extends IElement | HTMLElement | string
+>(node: T, sel: string): IElement => {
   let el: IElement | undefined = isElement(node)
     ? node
     : isString(node)
@@ -19,7 +59,6 @@ export const traverseUpward =  <T extends IElement | HTMLElement | string>(node:
   if(!el) {
     throw new Error (`Unexpected node passed into traverseUpward: ${typeof node}`);
   }
-
 
 	while(el.parentElement && !el.parentElement.matches(sel)) {
 		el = el.parentElement as unknown as IElement;
@@ -89,3 +128,4 @@ export const peers = <T extends IElement | NodeList | string>(input: T, sel: str
   throw new Error(`Unknown input type [${typeof input}] provided to peers()!`)
 
 }
+

@@ -2,7 +2,10 @@
 
 A wrapper around the popular [happy-dom](https://github.com/capricorn86/happy-dom) API which provides a more _functional_ interaction model.
 
-Note: version 3.x bumps the version of happy-dom up to the 12.x.y versions.
+Note:
+
+- version 3.x bumps the version of happy-dom up to the 12.x.y versions.
+- version 3.4 _onward_ have switched to using the `happy-dom-without-chrome` dependency so that this library is equally as happy running in a browser as it is running on a server.
 
 ## Examples
 
