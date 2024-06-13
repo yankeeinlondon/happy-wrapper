@@ -1,5 +1,5 @@
 import { isString } from "inferred-types";
-import { IElement, createElement, createFragment, isElement, isHtmlElement, isNodeList } from ".";
+import { IElement, createElement,  isElement, isHtmlElement, isNodeList } from ".";
 
 
 /**
