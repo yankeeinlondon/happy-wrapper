@@ -71,6 +71,11 @@ export function isElement(el: unknown): el is IElement {
   );
 }
 
+/**
+ * **isHtmlElement**
+ * 
+ * Tests whether the value passed in is an `HTMLElement`
+ */
 export const isHtmlElement = <T>(val: T): val is T & HTMLElement => {
   return isObject(val) && "nodeType" in val && val.nodeType === 1;
 }
@@ -147,3 +152,12 @@ export const isContainer = (thing: unknown): thing is Container => {
 export const nodeChildrenAllElements = <D extends DocRoot>(node: D) => {
   return node.childNodes.every((n) => isElement(n));
 };
+
+/**
+ * **isNodeList**`(val)`
+ * 
+ * Type guards which validates that _val_ is a `NodeList`
+ */
+export const isNodeList = <T>(val: T): val is T & NodeList => {
+  return isObject(val) && "length" in val && typeof val.length === "number" && "item" in val && "forEach" in val;
+}

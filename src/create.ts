@@ -1,5 +1,5 @@
 import { identity } from "fp-ts/lib/function.js";
-import { Comment, Text, Window } from "happy-dom-without-node";
+import { Comment, HTMLDocument, Text, Window } from "happy-dom-without-node";
 import { dasherize } from "native-dash";
 import { HappyMishap } from "./errors";
 import type { Container, HTML } from "./happy-types";
@@ -17,7 +17,7 @@ export function createDocument(body: string, head?: string): HappyDoc {
   if (head) {
     document.head.innerHTML = head;
   }
-  return document as HappyDoc;
+  return document as HTMLDocument;
 }
 
  
@@ -102,7 +102,7 @@ export const createElement = (
         if (isElementLike(frag)) {
           if (parent) {
             parent.append(frag.firstElementChild);
-            return parent?.lastElementChild as IElement;
+            return parent?.lastElementChild.cloneNode() as IElement;
           }
 
           return frag.firstElementChild as IElement;

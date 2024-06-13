@@ -1,8 +1,8 @@
 import type {
-  Document,
+  Document as HDoc,
   // use of Fragment offers less conflicts which can come into play with DocumentFragment
   DocumentFragment,
-  HTMLElement,
+  HTMLElement as HElement,
   Text,
   Comment as HComment,
   Node
@@ -13,7 +13,7 @@ import type {
  * `Document` so as to avoid possible conflicts with Typescript's
  * built in `Document` type.
  */
-export interface HappyDoc extends Document {}
+export interface HappyDoc extends HDoc {}
 /** a document in happy-dom */
 export type IDocument = Document;
 /** a document fragment [happy-dom] */
@@ -21,7 +21,7 @@ export type IDocumentFragment = DocumentFragment;
 /** a document fragment [happy-dom] */
 export type IFragment = DocumentFragment;
 /** An element in the DOM [happy-dom] */
-export type IElement = HTMLElement;
+export type IElement = HElement & HTMLElement;
 /** a comment node in happy-dom */
 export type IComment = HComment;
 /** A text node in happy-dom */
@@ -37,3 +37,4 @@ export * from "./nodes";
 export * from "./select";
 export * from "./type-guards";
 export * from "./utils";
+export * from "./helpers";
