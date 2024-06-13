@@ -38,3 +38,4 @@ export * from "./select";
 export * from "./type-guards";
 export * from "./utils";
 export * from "./helpers";
+export * from "./query";
