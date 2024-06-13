@@ -41,10 +41,7 @@ export const peers = <T extends IElement | NodeList | string>(input: T, sel: str
     return peers(createElement(input), sel) as IElement;
   }
 
-  const a = null as unknown as NodeList;
-
   if(isNodeList(input)) {
-    let found: IElement;
     input.forEach(el => {
       if(isElement(el) && el.matches(sel)) {
         return el
