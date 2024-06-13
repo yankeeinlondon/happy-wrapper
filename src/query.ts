@@ -1,8 +1,8 @@
-import { AsString, Contains, IsStringLiteral, isString } from "inferred-types";
+import { AsString, Contains, IsStringLiteral, Never, isFunction, isString } from "inferred-types";
 import { HappyDoc, IElement, IFragment, createDocument, createFragment, isDocument, isElement } from ".";
 
 
-export type HandlingApproach = "empty" | "throw" | "undefined";
+export type HandlingApproach = "empty" | "throw" | "undefined" | (() => unknown);
 
 export type DomSource = string | HappyDoc | Document | IFragment | IElement | HTMLElement;
 
@@ -97,8 +97,18 @@ export const query = <
   return (
     result !== undefined
       ? result
-      : handling === "empty" ? {} as Record<string, undefined> : undefined
-  ) as H extends "throw" ? IElement : H extends "empty" ? IElement | Record<string, undefined> : IElement | undefined ;
+      : handling === "empty" 
+        ? {} as Record<string, undefined> 
+        : handling === "undefined" ?  undefined : isFunction(handling) ? handling() : Never
+  ) as H extends "throw" 
+    ? IElement 
+    : H extends "empty" 
+    ? IElement | Record<string, undefined> 
+    : H extends "undefined"
+    ? IElement | undefined 
+    : H extends () => unknown
+    ? ReturnType<H>
+    : never;
 }
 
 export const queryAll = <
@@ -143,12 +153,22 @@ export const queryAll = <
   return (
     result !== undefined
       ? result
-      : handling === "empty" ? {} as Record<string, undefined> : undefined
+      : handling === "empty" 
+        ? {} as Record<string, undefined> 
+        : handling === "undefined"
+        ? undefined
+        : isFunction(handling)
+        ? handling()
+        : Never
   ) as H extends "throw" 
     ? NodeList
     : H extends "empty" 
     ? NodeList | Record<string, undefined> 
-    : NodeList | undefined;
+    : H extends "undefined"
+    ? NodeList | undefined
+    : H extends () => unknown
+    ? ReturnType<H>
+    : never;
 }
 
 
