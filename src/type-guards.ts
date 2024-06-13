@@ -8,6 +8,7 @@ import type {
 } from "./happy-types";
 import type { HappyMishap } from "./errors";
 import type { IFragment, HappyDoc, IElement, IText, INode } from "./index";
+import { isObject } from "inferred-types";
 
 export function isHappyWrapperError(err: unknown): err is HappyMishap {
   return typeof err === "object" && (err as any).kind === "HappyWrapper";
@@ -68,6 +69,10 @@ export function isElement(el: unknown): el is IElement {
     "outerHTML" in (el as object) &&
     (el as IElement).nodeType === 1
   );
+}
+
+export const isHtmlElement = <T>(val: T): val is T & HTMLElement => {
+  return isObject(val) && "nodeType" in val && val.nodeType === 1;
 }
 
 /**

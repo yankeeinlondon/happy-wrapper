@@ -163,6 +163,7 @@ export interface NodeSelector<T extends Container | "html"> {
    * The _type_ of the root node
    */
   type: () => NodeType;
+
   /**
    * Find the first `IElement` found using the selector string.
    *

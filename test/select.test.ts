@@ -130,6 +130,7 @@ const test2 = "test2"
     expect(missing).toBe(null);
     expect(bunchANothing).toHaveLength(0);
   });
+  
 
   it("wrap() utility on an HTML selection works", () => {
     const html = '<span class="foo bar">foobar</span>';
