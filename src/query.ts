@@ -1,8 +1,8 @@
-import { AsString, Contains, IsStringLiteral, Never, isFunction, isString } from "inferred-types";
+import { AsString, Contains, IsStringLiteral, Narrowable, Never, isFunction, isString } from "inferred-types";
 import { HappyDoc, IElement, IFragment, createDocument, createFragment, isDocument, isElement } from ".";
 
 
-export type HandlingApproach = "empty" | "throw" | "undefined" | (() => unknown);
+export type HandlingApproach = "empty" | "throw" | "undefined" | (() => Narrowable);
 
 export type DomSource = string | HappyDoc | Document | IFragment | IElement | HTMLElement;
 
@@ -112,7 +112,7 @@ export const query = <
 }
 
 export const queryAll = <
-  T extends string | HappyDoc | Document | IFragment | IElement | HTMLElement,
+  T extends DomSource,
   H extends HandlingApproach = "empty"
 >(
   dom: T, 
@@ -133,7 +133,6 @@ export const queryAll = <
   } else {
     container = dom as IFragment as MapContainerType<T>
   }
-
 
   const result = container.querySelectorAll(sel);
 
@@ -171,4 +170,139 @@ export const queryAll = <
     : never;
 }
 
+export type TextCriteria = [
+  criteria: "contains" | "startsWith" | "endsWith" | "doesNotContain",
+  comparator: string
+] | [
+  criteria: "regex",
+  comparator: RegExp
+] | [
+  criteria: "callback",
+  comparator: (el: IElement) => boolean
+];
 
+/**
+ * **findWhere**`(source, sel, handling, condition)`
+ * 
+ * Finds a single selection -- where possible -- that
+ * meets the `sel` _selector_ criteria AND the text
+ * criteria.
+ * 
+ * Note: because there is a callback option, this can classify on
+ * more than text content but that is the primary driver.
+ * 
+ * **Related:** `findAllWhere()`
+ */
+export const findWhere = <
+  TSource extends DomSource,
+  TSelect extends string,
+  TText extends TextCriteria,
+  THandle extends HandlingApproach
+>(
+  source: TSource, 
+  selector: TSelect, 
+  handling: THandle, 
+  ...text: TText) => {
+  const results = Array.from(
+    queryAll(source, selector, "throw")).filter(i => isElement(i)
+  ) as IElement[];
+
+  const [ criteria, comparator ] = text;
+  let found = results.find(r => {
+    const txt = r.textContent;
+    switch(criteria) {
+      case "callback":
+        return comparator(r);
+      case "contains":
+        return txt.includes(comparator);
+      case "endsWith":
+        return txt.endsWith(comparator);
+      case "startsWith":
+        return txt.startsWith(comparator);
+      case "doesNotContain":
+        return !txt.includes(comparator);
+      case "regex":
+        return comparator.test(txt);
+    }
+  });
+
+  if(!found && handling === "throw") {
+    const err = new Error(
+      `Failed to find any elements which met the selector "${selector}" as well as the "${criteria}" criteria of "${String(comparator)}"`
+    ) as Error & { 
+      container: MapContainerTypeName<TSource>,
+      selector: string;
+      criteria: string;
+      comparator: string | RegExp | ((el: IElement) => unknown)
+    };
+		err.name = "DomError";
+    err.container = containerName(source);
+    err.selector = selector;
+    err.criteria = criteria;
+    err.comparator = comparator;
+		throw err;
+  }
+
+  return (
+    found
+      ? found
+      : handling === "undefined" 
+        ? undefined 
+        : handling === "empty"
+          ? {} 
+          : isFunction(handling)
+            ? handling()
+            : Never
+  ) as unknown as THandle extends "throw" 
+  ? IElement 
+  : THandle extends "empty" 
+  ? IElement | Record<string, undefined> 
+  : THandle extends "undefined"
+  ? IElement | undefined 
+  : THandle extends () => unknown
+  ? IElement | ReturnType<THandle>
+  : never;
+}
+
+
+/**
+ * **findAllWhere**`(source, selector, criteria, comparator)`
+ * 
+ * Finds all elements which meet both the _selector_ criteria
+ * as well as `criteria/comparator` condition.
+ */
+export const findAllWhere = <
+  TSource extends DomSource,
+  TSelect extends string,
+  TText extends TextCriteria,
+>(
+  source: TSource, 
+  selector: TSelect, 
+  ...text: TText
+) => {
+  const results = Array.from(
+    queryAll(source, selector, "throw")).filter(i => isElement(i)
+  ) as IElement[];
+
+  const [ criteria, comparator ] = text;
+  let found = results.filter(r => {
+    const txt = r.textContent;
+    switch(criteria) {
+      case "callback":
+        return comparator(r);
+      case "contains":
+        return txt.includes(comparator);
+      case "endsWith":
+        return txt.endsWith(comparator);
+      case "startsWith":
+        return txt.startsWith(comparator);
+      case "doesNotContain":
+        return !txt.includes(comparator);
+      case "regex":
+        return comparator.test(txt);
+    }
+  });
+
+
+  return found as IElement[];
+}

@@ -1,6 +1,6 @@
 import { Equal, Expect } from "@type-challenges/utils";
 import { describe, expect, it } from "vitest";
-import { query } from "../src/query";
+import { findAllWhere, findWhere, query } from "../src/query";
 import { IElement } from "../src";
 
 // Note: while type tests clearly fail visible inspection, they pass from Vitest
@@ -21,6 +21,7 @@ const html = `
   topic three
   <span class="foo bar">foobar</span>
 </div>
+<div class="topic">something else</div>
 </html>
 `;
 
@@ -61,3 +62,33 @@ describe("query()", () => {
   
 
 });
+
+describe("findWhere(source, selector, handler, criteria, comparator)", () => {
+
+  it("happy path", () => {
+    const two = findWhere(html, ".topic", "undefined", "contains", "two");
+    const fallback = findWhere(html, ".topic-schmopic", () => "fallback", "contains", "two");
+
+    expect(two?.textContent).toBe("topic two");
+    expect(fallback).toBe("fallback");
+
+    type cases = [
+      Expect<Equal<typeof two, IElement | undefined>>, 
+      Expect<Equal<typeof fallback, IElement | string>>, 
+    ];
+    const cases: cases = [ true, true ];
+  });
+
+});
+
+describe("findAllWhere(source, selector, criteria, comparator)", () => {
+
+  it("happy path", () => {
+    const found = findAllWhere(html, ".topic", "doesNotContain", "topic");
+
+    expect(found.length).toBe(1);
+    
+  });
+
+});
+
