@@ -130,8 +130,7 @@ export const query = <
  * **queryAll**
  */
 export const queryAll = <
-  T extends DomSource,
-  H extends HandlingApproach = "empty"
+  T extends DomSource
 >(
   dom: T, 
   sel: string
