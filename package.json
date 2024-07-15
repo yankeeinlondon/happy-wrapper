@@ -31,6 +31,7 @@
   "scripts": {
     "bump": "bumpp",
     "audit:fix": "pnpm audit --fix",
+    "build": "tsup src/index.ts --format esm --dts --clean",
     "watch": "tsup src/index.ts --format esm --dts --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",

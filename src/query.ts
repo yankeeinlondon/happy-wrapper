@@ -197,7 +197,7 @@ export const findWhere = <
   handling: THandle, 
   ...text: TText) => {
   const results = Array.from(
-    queryAll(source, selector, "throw")).filter(i => isElement(i)
+    queryAll(source, selector)).filter(i => isElement(i)
   ) as IElement[];
 
   const [ criteria, comparator ] = text;
