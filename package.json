@@ -1,6 +1,6 @@
 {
   "name": "@yankeeinlondon/happy-wrapper",
-  "version": "3.5.4",
+  "version": "3.5.5",
   "description": "A functional API surface wrapping happy-dom",
   "keywords": [
     "dom",
@@ -29,7 +29,7 @@
     "dist"
   ],
   "scripts": {
-		"bump": "bumpp",
+    "bump": "bumpp",
     "audit:fix": "pnpm audit --fix",
     "watch": "tsup src/index.ts --format esm --dts --watch",
     "test": "vitest",
