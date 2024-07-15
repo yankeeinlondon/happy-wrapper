@@ -1,9 +1,24 @@
-import { AsString, Contains, IsStringLiteral, Narrowable, Never, isFunction, isString } from "inferred-types";
-import { HappyDoc, IElement, IFragment, createDocument, createFragment, isDocument, isElement } from ".";
+import { 
+  AsString, 
+  Contains, 
+  IsStringLiteral, 
+  Narrowable, 
+  Never, 
+  isFunction, 
+  isString 
+} from "inferred-types";
+import { 
+  HappyDoc, 
+  IElement, 
+  IFragment, 
+  createDocument, 
+  createFragment, 
+  isDocument, 
+  isElement 
+} from "./index";
 
 
 export type HandlingApproach = "empty" | "throw" | "undefined" | (() => Narrowable);
-
 export type DomSource = string | HappyDoc | Document | IFragment | IElement | HTMLElement;
 
 export type MapContainerType<T extends DomSource> = T extends string
@@ -111,13 +126,15 @@ export const query = <
     : never;
 }
 
+/**
+ * **queryAll**
+ */
 export const queryAll = <
   T extends DomSource,
   H extends HandlingApproach = "empty"
 >(
   dom: T, 
-  sel: string,
-  handling: H = "empty" as H
+  sel: string
 ) => {
   let container: MapContainerType<T>;
   if (typeof dom === "string") {
@@ -134,40 +151,16 @@ export const queryAll = <
     container = dom as IFragment as MapContainerType<T>
   }
 
-  const result = container.querySelectorAll(sel);
-
-  if (handling === "throw" && !result) {
-    const err = new Error(`Failed to find an HTML element for the selector "${sel}"`) as Error & { 
-      node: T,
-      container: MapContainerTypeName<T>,
-      selector: string;
-    };
-		err.name = "DomError";
-		// err.dom = dom;
-    err.container = containerName(dom);
-    err.selector = sel;
-		throw err;
-  }
+  let result: Element[] = [];
+  container.querySelectorAll(sel).forEach((i) => {
+    if (isElement(i)) {
+      result.push(i);
+    }
+  });
 
   return (
-    result !== undefined
-      ? result
-      : handling === "empty" 
-        ? {} as Record<string, undefined> 
-        : handling === "undefined"
-        ? undefined
-        : isFunction(handling)
-        ? handling()
-        : Never
-  ) as H extends "throw" 
-    ? NodeList
-    : H extends "empty" 
-    ? NodeList | Record<string, undefined> 
-    : H extends "undefined"
-    ? NodeList | undefined
-    : H extends () => unknown
-    ? ReturnType<H>
-    : never;
+    result
+  ) as IElement[]
 }
 
 export type TextCriteria = [

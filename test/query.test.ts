@@ -1,6 +1,6 @@
 import { Equal, Expect } from "@type-challenges/utils";
 import { describe, expect, it } from "vitest";
-import { findAllWhere, findWhere, query } from "../src/query";
+import { findAllWhere, findWhere, query, queryAll } from "../src/query";
 import { IElement } from "../src";
 
 // Note: while type tests clearly fail visible inspection, they pass from Vitest
@@ -44,6 +44,16 @@ describe("query()", () => {
       true
     ];
   });
+
+  
+  it("query for all line items", () => {
+    const all = queryAll(html, "ul li");
+    
+    expect(all.length).toBe(3);
+    expect(all.every(el => el.tagName === "LI")).toBe(true);
+    
+  });
+  
 
   
   it("happy path with empty object", () => {

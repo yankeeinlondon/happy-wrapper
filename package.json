@@ -29,9 +29,9 @@
     "dist"
   ],
   "scripts": {
+		"bump": "bumpp",
     "audit:fix": "pnpm audit --fix",
-    "build": "tsup src/index.ts --format esm --dts --sourcemap external --clean",
-    "watch": "tsup src/index.ts --format esm --dts --sourcemap external --watch",
+    "watch": "tsup src/index.ts --format esm --dts --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "prepublishOnly": "npm run build",
